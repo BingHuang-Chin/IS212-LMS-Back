@@ -1,0 +1,1 @@
+CREATE TABLE "public"."class" ("course_id" integer NOT NULL, "trainer_id" integer NOT NULL, "name" text NOT NULL, PRIMARY KEY ("course_id","trainer_id") , FOREIGN KEY ("course_id") REFERENCES "public"."course"("id") ON UPDATE cascade ON DELETE cascade, FOREIGN KEY ("trainer_id") REFERENCES "public"."trainer"("id") ON UPDATE cascade ON DELETE cascade);

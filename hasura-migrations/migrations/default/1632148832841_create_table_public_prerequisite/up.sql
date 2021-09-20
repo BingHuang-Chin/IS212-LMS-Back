@@ -1,0 +1,1 @@
+CREATE TABLE "public"."prerequisite" ("required_course_id" serial NOT NULL, "course_id" integer NOT NULL, PRIMARY KEY ("required_course_id","course_id") , FOREIGN KEY ("course_id") REFERENCES "public"."course"("id") ON UPDATE cascade ON DELETE cascade);

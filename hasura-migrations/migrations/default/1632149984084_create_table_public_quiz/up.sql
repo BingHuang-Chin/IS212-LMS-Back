@@ -1,0 +1,1 @@
+CREATE TABLE "public"."quiz" ("id" serial NOT NULL, "section_id" integer NOT NULL, "title" text NOT NULL, "time_limit" integer NOT NULL, PRIMARY KEY ("id") , FOREIGN KEY ("section_id") REFERENCES "public"."section"("id") ON UPDATE cascade ON DELETE cascade);

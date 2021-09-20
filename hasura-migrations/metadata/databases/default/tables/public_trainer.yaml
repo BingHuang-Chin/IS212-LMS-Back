@@ -1,0 +1,3 @@
+table:
+  name: trainer
+  schema: public

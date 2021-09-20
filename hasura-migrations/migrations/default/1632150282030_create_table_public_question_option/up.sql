@@ -1,0 +1,1 @@
+CREATE TABLE "public"."question_option" ("id" serial NOT NULL, "question_id" integer NOT NULL, "is_answer" boolean NOT NULL, PRIMARY KEY ("id") , FOREIGN KEY ("question_id") REFERENCES "public"."question"("id") ON UPDATE cascade ON DELETE cascade);
