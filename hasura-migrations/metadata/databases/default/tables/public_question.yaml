@@ -1,3 +1,53 @@
 table:
   name: question
   schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - question_type_id
+    - quiz_id
+    - title
+  role: trainer
+select_permissions:
+- permission:
+    columns:
+    - id
+    - quiz_id
+    - question_type_id
+    - title
+    - created_at
+    filter: {}
+  role: hr
+- permission:
+    columns:
+    - id
+    - question_type_id
+    - quiz_id
+    - title
+    - created_at
+    filter: {}
+  role: learner
+- permission:
+    columns:
+    - id
+    - quiz_id
+    - question_type_id
+    - title
+    - created_at
+    filter: {}
+  role: trainer
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - question_type_id
+    - quiz_id
+    - title
+    filter: {}
+  role: trainer
+delete_permissions:
+- permission:
+    filter: {}
+  role: trainer

@@ -1,3 +1,42 @@
 table:
   name: prerequisite
   schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - required_course_id
+    - course_id
+  role: hr
+select_permissions:
+- permission:
+    columns:
+    - course_id
+    - required_course_id
+    filter: {}
+  role: hr
+- permission:
+    columns:
+    - course_id
+    - required_course_id
+    filter: {}
+  role: learner
+- permission:
+    columns:
+    - course_id
+    - required_course_id
+    filter: {}
+  role: trainer
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - course_id
+    - required_course_id
+    filter: {}
+  role: hr
+delete_permissions:
+- permission:
+    filter: {}
+  role: hr

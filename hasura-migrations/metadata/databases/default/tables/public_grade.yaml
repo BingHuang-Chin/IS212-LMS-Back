@@ -1,3 +1,46 @@
 table:
   name: grade
   schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - quiz_id
+    - score
+  role: trainer
+select_permissions:
+- permission:
+    columns:
+    - id
+    - completed_date
+    - score
+    - quiz_id
+    - learner_id
+    filter: {}
+  role: hr
+- permission:
+    columns:
+    - id
+    - learner_id
+    - quiz_id
+    - score
+    - completed_date
+    filter: {}
+  role: learner
+- permission:
+    columns:
+    - id
+    - learner_id
+    - quiz_id
+    - score
+    - completed_date
+    filter: {}
+  role: trainer
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - score
+    filter: {}
+  role: trainer
