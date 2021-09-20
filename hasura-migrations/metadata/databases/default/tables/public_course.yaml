@@ -1,6 +1,39 @@
 table:
   name: course
   schema: public
+object_relationships:
+- name: badge
+  using:
+    foreign_key_constraint_on: badge_id
+array_relationships:
+- name: classes
+  using:
+    foreign_key_constraint_on:
+      column: course_id
+      table:
+        name: class
+        schema: public
+- name: enrolments
+  using:
+    foreign_key_constraint_on:
+      column: course_id
+      table:
+        name: enrolment
+        schema: public
+- name: prerequisites
+  using:
+    foreign_key_constraint_on:
+      column: required_course_id
+      table:
+        name: prerequisite
+        schema: public
+- name: sections
+  using:
+    foreign_key_constraint_on:
+      column: course_id
+      table:
+        name: section
+        schema: public
 insert_permissions:
 - permission:
     backend_only: false

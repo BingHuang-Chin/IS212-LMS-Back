@@ -1,6 +1,10 @@
 table:
   name: prerequisite
   schema: public
+object_relationships:
+- name: course
+  using:
+    foreign_key_constraint_on: course_id
 insert_permissions:
 - permission:
     backend_only: false

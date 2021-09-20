@@ -1,6 +1,14 @@
 table:
   name: status
   schema: public
+array_relationships:
+- name: enrolments
+  using:
+    foreign_key_constraint_on:
+      column: status_id
+      table:
+        name: enrolment
+        schema: public
 insert_permissions:
 - permission:
     backend_only: false

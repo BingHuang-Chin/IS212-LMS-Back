@@ -1,6 +1,28 @@
 table:
   name: trainer
   schema: public
+array_relationships:
+- name: classes
+  using:
+    foreign_key_constraint_on:
+      column: trainer_id
+      table:
+        name: class
+        schema: public
+- name: enrolments
+  using:
+    foreign_key_constraint_on:
+      column: trainer_id
+      table:
+        name: enrolment
+        schema: public
+- name: sections
+  using:
+    foreign_key_constraint_on:
+      column: trainer_id
+      table:
+        name: section
+        schema: public
 insert_permissions:
 - permission:
     backend_only: false

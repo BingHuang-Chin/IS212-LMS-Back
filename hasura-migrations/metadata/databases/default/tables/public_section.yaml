@@ -1,6 +1,14 @@
 table:
   name: section
   schema: public
+array_relationships:
+- name: quizzes
+  using:
+    foreign_key_constraint_on:
+      column: section_id
+      table:
+        name: quiz
+        schema: public
 insert_permissions:
 - permission:
     backend_only: false

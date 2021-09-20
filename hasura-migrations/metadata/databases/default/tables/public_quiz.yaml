@@ -1,6 +1,25 @@
 table:
   name: quiz
   schema: public
+object_relationships:
+- name: section
+  using:
+    foreign_key_constraint_on: section_id
+array_relationships:
+- name: grades
+  using:
+    foreign_key_constraint_on:
+      column: quiz_id
+      table:
+        name: grade
+        schema: public
+- name: questions
+  using:
+    foreign_key_constraint_on:
+      column: quiz_id
+      table:
+        name: question
+        schema: public
 insert_permissions:
 - permission:
     backend_only: false

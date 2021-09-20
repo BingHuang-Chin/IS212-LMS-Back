@@ -1,6 +1,13 @@
 table:
   name: class
   schema: public
+object_relationships:
+- name: course
+  using:
+    foreign_key_constraint_on: course_id
+- name: trainer
+  using:
+    foreign_key_constraint_on: trainer_id
 insert_permissions:
 - permission:
     backend_only: false

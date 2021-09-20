@@ -1,6 +1,13 @@
 table:
   name: grade
   schema: public
+object_relationships:
+- name: learner
+  using:
+    foreign_key_constraint_on: learner_id
+- name: quiz
+  using:
+    foreign_key_constraint_on: quiz_id
 insert_permissions:
 - permission:
     backend_only: false

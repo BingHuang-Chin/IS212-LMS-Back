@@ -1,6 +1,18 @@
 table:
   name: question
   schema: public
+object_relationships:
+- name: question_type
+  using:
+    foreign_key_constraint_on: question_type_id
+array_relationships:
+- name: question_options
+  using:
+    foreign_key_constraint_on:
+      column: question_id
+      table:
+        name: question_option
+        schema: public
 insert_permissions:
 - permission:
     backend_only: false
