@@ -6,9 +6,10 @@ insert_permissions:
     backend_only: false
     check: {}
     columns:
-    - is_answer
     - id
+    - is_answer
     - question_id
+    - title
   role: trainer
 select_permissions:
 - permission:
@@ -16,28 +17,32 @@ select_permissions:
     - id
     - is_answer
     - question_id
+    - title
     filter: {}
   role: hr
 - permission:
     columns:
     - id
     - question_id
+    - title
     filter: {}
   role: learner
 - permission:
     columns:
-    - is_answer
     - id
+    - is_answer
     - question_id
+    - title
     filter: {}
   role: trainer
 update_permissions:
 - permission:
     check: null
     columns:
-    - is_answer
     - id
+    - is_answer
     - question_id
+    - title
     filter: {}
   role: trainer
 delete_permissions:
