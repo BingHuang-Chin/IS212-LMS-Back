@@ -1,3 +1,50 @@
 table:
   name: status
   schema: public
+array_relationships:
+- name: enrolments
+  using:
+    foreign_key_constraint_on:
+      column: status_id
+      table:
+        name: enrolment
+        schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - id
+    - name
+  role: hr
+select_permissions:
+- permission:
+    columns:
+    - id
+    - name
+    filter: {}
+  role: hr
+- permission:
+    columns:
+    - id
+    - name
+    filter: {}
+  role: learner
+- permission:
+    columns:
+    - id
+    - name
+    filter: {}
+  role: trainer
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - id
+    - name
+    filter: {}
+  role: hr
+delete_permissions:
+- permission:
+    filter: {}
+  role: hr
