@@ -13,7 +13,7 @@ function handleProcess (quizChanges) {
 
 function retrieveBodyData (body) {
   if (body && body.input)
-    return body.input.object
+    return { input: body.input.object }
 
   return { error: { status: 400, message: "Invalid input provided." } }
 }
