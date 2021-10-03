@@ -99,7 +99,7 @@ test("[retrieveBodyData] Populated input", () => {
 })
 
 test("[handleProcess] Return results to hasura", () => {
-  const retrievedData = retrieveBodyData(validMockData)
-  const result = handleProcess(retrievedData)
+  const { input } = retrieveBodyData(validMockData)
+  const result = handleProcess(input)
   expect(result).toEqual({ hello: "bye" })
 })
