@@ -50,9 +50,12 @@ async function getOldQuiz (quizId) {
     })
   })
 
-  const { error, data } = await response.json()
-  if (error)
-    return { error: { status: 400, message: "Invalid quiz provided." } }
+  const { errors, data } = await response.json()
+  if (errors)
+    return { error: { status: 500, message: "Internal server error." } }
+
+  if (!data.quiz_by_pk)
+    return { error: { status: 404, message: "Quiz not found." } }
 
   return { data: { ...data, status: 200 } }
 }
