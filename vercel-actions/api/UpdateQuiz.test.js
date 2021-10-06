@@ -189,7 +189,7 @@ test("[getOldQuiz] Retrieve valid old quiz from Hausra", async () => {
 
   fetch.mockImplementation(() => Promise.resolve({ json: () => expectedResponse }))
 
-  const { data } = await getOldQuiz("8")
+  const { data } = await getOldQuiz("trainer", 1)
   const { status, ...remainingData } = data
 
   expect(status).toBe(200)
@@ -205,7 +205,7 @@ test("[getOldQuiz] Retrieve invalid old quiz from Hasura", async () => {
 
   fetch.mockImplementation(() => Promise.resolve({ json: () => expectedResponse }))
 
-  const { error } = await getOldQuiz(1)
+  const { error } = await getOldQuiz("trainer", 1)
   const { status, message } = error
 
   expect(status).toBe(404)
@@ -227,7 +227,7 @@ test("[getOldQuiz] Retrieve old quiz from hasura with invalid query", async () =
 
   fetch.mockImplementation(() => Promise.resolve({ json: () => expectedResponse }))
 
-  const { error } = await getOldQuiz(1)
+  const { error } = await getOldQuiz("trainer", 1)
   const { status, message } = error
 
   expect(status).toBe(500)
