@@ -107,7 +107,7 @@ test("[handleProcess] Return results to hasura", () => {
   expect(result).toEqual({ hello: "bye" })
 })
 
-test("[getOldQuiz] Retrieve valid old quiz from Hausra", async () => {
+test("[getOldQuiz] Retrieve valid and authorized old quiz from Hausra", async () => {
   const expectedResponse = {
     "data": {
       "quiz_by_pk": {
@@ -189,14 +189,14 @@ test("[getOldQuiz] Retrieve valid old quiz from Hausra", async () => {
 
   fetch.mockImplementation(() => Promise.resolve({ json: () => expectedResponse }))
 
-  const { data } = await getOldQuiz("8")
+  const { data } = await getOldQuiz("trainer", 8)
   const { status, ...remainingData } = data
 
   expect(status).toBe(200)
   expect(remainingData).toEqual(expectedResponse.data)
 })
 
-test("[getOldQuiz] Retrieve invalid old quiz from Hasura", async () => {
+test("[getOldQuiz] Retrieve invalid and authorized old quiz from Hasura", async () => {
   const expectedResponse = {
     "data": {
       "quiz_by_pk": null
@@ -212,7 +212,7 @@ test("[getOldQuiz] Retrieve invalid old quiz from Hasura", async () => {
   expect(message).toEqual(expect.any(String))
 })
 
-test("[getOldQuiz] Retrieve old quiz from hasura with invalid query", async () => {
+test("[getOldQuiz] Retrieve old and authorized quiz from hasura with invalid query", async () => {
   const expectedResponse = {
     "errors": [
       {
