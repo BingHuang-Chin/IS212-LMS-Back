@@ -7,8 +7,6 @@ const vercelFn = (request, response) => {
   const { error: oldQuizError, data: oldQuizData } = getOldQuiz(8)
   if (oldQuizError) return response.json(error)
 
-  console.log(input, oldQuizData)
-
   return response.json(handleProcess(input))
 }
 
@@ -23,12 +21,13 @@ function retrieveBodyData (body) {
   return { error: { status: 400, message: "Invalid input provided." } }
 }
 
-async function getOldQuiz (quizId) {
+async function getOldQuiz (role, quizId) {
   const response = await fetch(process.env.HASURA_ENDPOINT, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": ""
+      "x-hasura-admin-secret": process.env.HASURA_ADMIN_SECRET,
+      "x-hasura-role": role
     },
     body: JSON.stringify({
       query: `
