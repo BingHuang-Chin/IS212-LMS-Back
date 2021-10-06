@@ -1,4 +1,7 @@
-const { handleProcess, retrieveBodyData } = require("./UpdateQuiz")
+const fetch = require("node-fetch")
+const { handleProcess, retrieveBodyData, getOldQuiz } = require("./UpdateQuiz")
+
+jest.mock("node-fetch", () => jest.fn())
 
 const validMockData = {
   input: {
@@ -102,4 +105,93 @@ test("[handleProcess] Return results to hasura", () => {
   const { input } = retrieveBodyData(validMockData)
   const result = handleProcess(input)
   expect(result).toEqual({ hello: "bye" })
+})
+
+test("[getOldQuiz] Retrieve old quiz from Hausra", async () => {
+  const expectedResponse = {
+    "data": {
+      "quiz_by_pk": {
+        "id": 8,
+        "title": "Quiz 3",
+        "time_limit": 1,
+        "section_id": 1,
+        "questions": [
+          {
+            "id": 5,
+            "title": "New question 2",
+            "question_type_id": 1,
+            "question_options": [
+              {
+                "id": 6,
+                "title": "some option 3",
+                "is_answer": false
+              },
+              {
+                "id": 16,
+                "title": "some option 6",
+                "is_answer": true
+              },
+              {
+                "id": 17,
+                "title": "some option 7",
+                "is_answer": false
+              },
+              {
+                "id": 21,
+                "title": "some option 8",
+                "is_answer": false
+              }
+            ]
+          },
+          {
+            "id": 10,
+            "title": "Question 3",
+            "question_type_id": 1,
+            "question_options": [
+              {
+                "id": 20,
+                "title": "Goodnight",
+                "is_answer": false
+              },
+              {
+                "id": 18,
+                "title": "Hello world",
+                "is_answer": true
+              },
+              {
+                "id": 19,
+                "title": "Goodbye",
+                "is_answer": false
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "title": "question 1",
+            "question_type_id": 2,
+            "question_options": [
+              {
+                "id": 3,
+                "title": "False",
+                "is_answer": true
+              },
+              {
+                "id": 15,
+                "title": "True",
+                "is_answer": false
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+
+  fetch.mockImplementation(() => Promise.resolve({ json: () => expectedResponse }))
+
+  const { data } = await getOldQuiz("8")
+  const { status, ...remainingData } = data
+
+  expect(status).toBe(200)
+  expect(remainingData).toEqual(expectedResponse.data)
 })
