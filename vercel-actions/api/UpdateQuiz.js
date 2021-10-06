@@ -15,8 +15,8 @@ function handleProcess (quizChanges) {
 }
 
 function retrieveBodyData (body) {
-  if (body && body.input)
-    return { input: body.input.object }
+  if (body && body.input && body.session_variables)
+    return { input: body.input.object, userRole: body.session_variables["x-hasura-user-id"] }
 
   return { error: { status: 400, message: "Invalid input provided." } }
 }
