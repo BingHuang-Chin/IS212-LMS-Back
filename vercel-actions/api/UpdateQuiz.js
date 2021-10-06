@@ -1,3 +1,5 @@
+const fetch = require("node-fetch")
+
 const vercelFn = (request, response) => {
   const { error, input } = retrieveBodyData(request.body)
   if (error)
@@ -7,7 +9,6 @@ const vercelFn = (request, response) => {
 }
 
 function handleProcess (quizChanges) {
-  console.log(quizChanges.questions.data.map(question => question.title))
   return { hello: "bye" }
 }
 
@@ -18,8 +19,47 @@ function retrieveBodyData (body) {
   return { error: { status: 400, message: "Invalid input provided." } }
 }
 
+async function getOldQuiz (quizId) {
+  const response = await fetch(process.env.HASURA_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": ""
+    },
+    body: JSON.stringify({
+      query: `
+        query {
+          quiz_by_pk(id: ${quizId}) {
+            id
+            title
+            time_limit
+            section_id
+            questions {
+              id
+              title
+              question_type_id
+              question_options {
+                id
+                title
+                is_answer
+              }
+            }
+          }
+        }
+      `
+    })
+  })
+
+  const { error, data } = await response.json()
+  if (error)
+    return { error: { status: 400, message: "Invalid quiz provided." } }
+
+  return { data: { ...data, status: 200 } }
+}
+
 module.exports = {
   handleProcess,
   retrieveBodyData,
+  getOldQuiz,
   default: vercelFn
 }
