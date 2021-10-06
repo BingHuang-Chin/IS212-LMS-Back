@@ -107,7 +107,7 @@ test("[handleProcess] Return results to hasura", () => {
   expect(result).toEqual({ hello: "bye" })
 })
 
-test("[getOldQuiz] Retrieve old quiz from Hausra", async () => {
+test("[getOldQuiz] Retrieve valid old quiz from Hausra", async () => {
   const expectedResponse = {
     "data": {
       "quiz_by_pk": {
@@ -194,4 +194,42 @@ test("[getOldQuiz] Retrieve old quiz from Hausra", async () => {
 
   expect(status).toBe(200)
   expect(remainingData).toEqual(expectedResponse.data)
+})
+
+test("[getOldQuiz] Retrieve invalid old quiz from Hasura", async () => {
+  const expectedResponse = {
+    "data": {
+      "quiz_by_pk": null
+    }
+  }
+
+  fetch.mockImplementation(() => Promise.resolve({ json: () => expectedResponse }))
+
+  const { error } = await getOldQuiz(1)
+  const { status, message } = error
+
+  expect(status).toBe(404)
+  expect(message).toEqual(expect.any(String))
+})
+
+test("[getOldQuiz] Retrieve old quiz from hasura with invalid query", async () => {
+  const expectedResponse = {
+    "errors": [
+      {
+        "extensions": {
+          "path": "$.query",
+          "code": "validation-failed"
+        },
+        "message": "not a valid graphql query"
+      }
+    ]
+  }
+
+  fetch.mockImplementation(() => Promise.resolve({ json: () => expectedResponse }))
+
+  const { error } = await getOldQuiz(1)
+  const { status, message } = error
+
+  expect(status).toBe(500)
+  expect(message).toEqual(expect.any(String))
 })
