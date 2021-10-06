@@ -1,9 +1,13 @@
 const fetch = require("node-fetch")
 
 const vercelFn = (request, response) => {
-  const { error, input } = retrieveBodyData(request.body)
-  if (error)
-    return response.json(error)
+  const { error: bodyDataError, input } = retrieveBodyData(request.body)
+  if (bodyDataError) return response.json(error)
+
+  const { error: oldQuizError, data: oldQuizData } = getOldQuiz(8)
+  if (oldQuizError) return response.json(error)
+
+  console.log(input, oldQuizData)
 
   return response.json(handleProcess(input))
 }
