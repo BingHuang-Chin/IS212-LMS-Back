@@ -4,6 +4,10 @@ const { handleProcess, retrieveBodyData, getOldQuiz } = require("./UpdateQuiz")
 jest.mock("node-fetch", () => jest.fn())
 
 const validMockData = {
+  session_variables: {
+    'x-hasura-role': 'trainer',
+    'x-hasura-user-id': 'auth0|614dfc64c69eb200704771b8'
+  },
   input: {
     "object": {
       "title": "Quiz 3",
@@ -98,12 +102,13 @@ test("[retrieveBodyData] Empty input", () => {
 
 test("[retrieveBodyData] Populated input", () => {
   const retrievedData = retrieveBodyData(validMockData)
-  expect(retrievedData).toEqual({ input: validMockData.input.object })
+  expect(retrievedData).toEqual({ input: validMockData.input.object, userRole: validMockData.session_variables["x-hasura-user-id"] })
 })
 
 test("[handleProcess] Return results to hasura", () => {
   const { input } = retrieveBodyData(validMockData)
   const result = handleProcess(input)
+
   expect(result).toEqual({ hello: "bye" })
 })
 
