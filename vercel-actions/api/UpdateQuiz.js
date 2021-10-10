@@ -109,7 +109,7 @@ function changesForQuestion (oldQuestions, newQuestions) {
   }
 
   const getDeletedQuestions = (oldOptions, newOptions) => {
-
+    // TODO: Handle questions which are deleted
   }
 
   getNewAndUpdatedQuestions()
