@@ -89,7 +89,7 @@ function changesForQuestion (oldQuestions, newQuestions) {
   const mutations = []
   const getNewAndUpdatedQuestions = () => {
     for (const newQuestion of newQuestions) {
-      const oldQuestion = oldQuestions.find(oldQuestion => oldQuestion.id ===  newQuestion.id)
+      const oldQuestion = oldQuestions.find(oldQuestion => oldQuestion.id === newQuestion.id)
       if (!oldQuestion) {
         // TOOD: Handle insert
         return
@@ -103,7 +103,8 @@ function changesForQuestion (oldQuestions, newQuestions) {
           id
         }`)
 
-        mutations.concat(changesForOptions(oldQuestion.question_options, newQuestion.question_options.data))
+        changesForOptions(oldQuestion.question_options, newQuestion.question_options.data)
+          .forEach(option => mutations.push(option))
       }
     }
   }
@@ -114,13 +115,36 @@ function changesForQuestion (oldQuestions, newQuestions) {
 
   getNewAndUpdatedQuestions()
   getDeletedQuestions()
-
   return mutations
 }
 
 function changesForOptions (oldOptions, newOptions) {
   const mutations = []
+  const getNewAndUpdatedOptions = () => {
+    for (const newOption of newOptions) {
+      const oldOption = oldOptions.find(oldOption => oldOption.id === newOption.id)
+      if (!oldOption) {
+        // TODO: Handle insert
+        return
+      }
 
+      const { id, is_answer: oldAnswer, title: oldTitle } = oldOption
+      const { is_answer: newAnswer, title: newTitle } = newOption
+
+      if (oldTitle !== newTitle || oldAnswer !== newAnswer) {
+        mutations.push(`update_question_option_by_pk(pk_columns: {id: ${id}}, _set: {is_answer: ${newAnswer}, title: "${newTitle}"}) {
+          id
+        }`)
+      }
+    }
+  }
+
+  const getDeletedOptions = () => {
+    // TODO: Handle options which are deleted
+  }
+
+  getNewAndUpdatedOptions()
+  getDeletedOptions()
   return mutations
 }
 
