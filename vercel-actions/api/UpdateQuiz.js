@@ -63,9 +63,71 @@ async function getOldQuiz (role, quizId) {
   return { data: { ...data, status: 200 } }
 }
 
+function getChanges (oldQuiz, newQuiz) {
+  const quizChanges = changesForQuizInformation(oldQuiz, newQuiz)
+  const questionChanges = changesForQuestion(oldQuiz.questions, newQuiz.questions.data)
+
+  return quizChanges.concat(questionChanges)
+}
+
+function changesForQuizInformation (oldQuiz, newQuiz) {
+  const mutations = []
+
+  const { id, title: oldTitle, time_limit: oldTimeLimit, section_id: oldSectionId } = oldQuiz
+  const { title: newTitle, time_limit: newTimeLimit, section_id: newSectionId } = newQuiz
+
+  if (oldTitle !== newTitle || oldTimeLimit !== newTimeLimit || oldSectionId !== newSectionId) {
+    mutations.push(`update_quiz_by_pk(pk_columns: {id: ${id}}, _set: {section_id: ${newSectionId}, time_limit: ${newTimeLimit}, title: "${newTitle}"}) {
+      id
+    }`)
+  }
+
+  return mutations
+}
+
+function changesForQuestion (oldQuestions, newQuestions) {
+  const mutations = []
+  const getNewAndUpdatedQuestions = () => {
+    for (const newQuestion of newQuestions) {
+      const oldQuestion = oldQuestions.find(oldQuestion => oldQuestion.id ===  newQuestion.id)
+      if (!oldQuestion) {
+        // TOOD: Handle insert
+        return
+      }
+
+      const { id, title: oldTitle, question_type_id: oldQuestionTypeId } = oldQuestion
+      const { title: newTitle, question_type_id: newQuestionTypeId } = newQuestion
+
+      if (oldTitle !== newTitle || oldQuestionTypeId !== newQuestionTypeId) {
+        mutations.push(`update_question_by_pk(pk_columns: {id: ${id}}, _set: {title: "${newTitle}", question_type_id: ${newQuestionTypeId}}) {
+          id
+        }`)
+
+        mutations.concat(changesForOptions(oldQuestion.question_options, newQuestion.question_options.data))
+      }
+    }
+  }
+
+  const getDeletedQuestions = (oldOptions, newOptions) => {
+
+  }
+
+  getNewAndUpdatedQuestions()
+  getDeletedQuestions()
+
+  return mutations
+}
+
+function changesForOptions (oldOptions, newOptions) {
+  const mutations = []
+
+  return mutations
+}
+
 module.exports = {
   handleProcess,
   retrieveBodyData,
   getOldQuiz,
+  getChanges,
   default: vercelFn
 }
