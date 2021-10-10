@@ -1,5 +1,5 @@
 const fetch = require("node-fetch")
-const { handleProcess, retrieveBodyData, getOldQuiz } = require("./UpdateQuiz")
+const { handleProcess, retrieveBodyData, getOldQuiz, getChanges } = require("./UpdateQuiz")
 
 jest.mock("node-fetch", () => jest.fn())
 
@@ -10,7 +10,7 @@ const validMockData = {
   },
   input: {
     "object": {
-      "title": "Quiz 3",
+      "title": "Updated Quiz 3",
       "section_id": 1,
       "time_limit": 1,
       "questions": {
@@ -69,17 +69,17 @@ const validMockData = {
             "id": 10
           },
           {
-            "title": "question 1",
+            "title": "New question 1",
             "question_type_id": 2,
             "question_options": {
               "data": [
                 {
-                  "is_answer": true,
+                  "is_answer": false,
                   "title": "False",
                   "id": 3
                 },
                 {
-                  "is_answer": false,
+                  "is_answer": true,
                   "title": "True",
                   "id": 15
                 }
@@ -90,6 +90,85 @@ const validMockData = {
         ]
       },
       "id": 8
+    }
+  }
+}
+
+const quizResponseFromHasura = {
+  "data": {
+    "quiz_by_pk": {
+      "id": 8,
+      "title": "Quiz 3",
+      "time_limit": 1,
+      "section_id": 1,
+      "questions": [
+        {
+          "id": 5,
+          "title": "New question 2",
+          "question_type_id": 1,
+          "question_options": [
+            {
+              "id": 6,
+              "title": "some option 3",
+              "is_answer": false
+            },
+            {
+              "id": 16,
+              "title": "some option 6",
+              "is_answer": true
+            },
+            {
+              "id": 17,
+              "title": "some option 7",
+              "is_answer": false
+            },
+            {
+              "id": 21,
+              "title": "some option 8",
+              "is_answer": false
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "title": "Question 3",
+          "question_type_id": 1,
+          "question_options": [
+            {
+              "id": 20,
+              "title": "Goodnight",
+              "is_answer": false
+            },
+            {
+              "id": 18,
+              "title": "Hello world",
+              "is_answer": true
+            },
+            {
+              "id": 19,
+              "title": "Goodbye",
+              "is_answer": false
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "title": "question 1",
+          "question_type_id": 2,
+          "question_options": [
+            {
+              "id": 3,
+              "title": "False",
+              "is_answer": true
+            },
+            {
+              "id": 15,
+              "title": "True",
+              "is_answer": false
+            }
+          ]
+        }
+      ]
     }
   }
 }
@@ -113,84 +192,7 @@ test("[handleProcess] Return results to hasura", () => {
 })
 
 test("[getOldQuiz] Retrieve valid old quiz from Hausra", async () => {
-  const expectedResponse = {
-    "data": {
-      "quiz_by_pk": {
-        "id": 8,
-        "title": "Quiz 3",
-        "time_limit": 1,
-        "section_id": 1,
-        "questions": [
-          {
-            "id": 5,
-            "title": "New question 2",
-            "question_type_id": 1,
-            "question_options": [
-              {
-                "id": 6,
-                "title": "some option 3",
-                "is_answer": false
-              },
-              {
-                "id": 16,
-                "title": "some option 6",
-                "is_answer": true
-              },
-              {
-                "id": 17,
-                "title": "some option 7",
-                "is_answer": false
-              },
-              {
-                "id": 21,
-                "title": "some option 8",
-                "is_answer": false
-              }
-            ]
-          },
-          {
-            "id": 10,
-            "title": "Question 3",
-            "question_type_id": 1,
-            "question_options": [
-              {
-                "id": 20,
-                "title": "Goodnight",
-                "is_answer": false
-              },
-              {
-                "id": 18,
-                "title": "Hello world",
-                "is_answer": true
-              },
-              {
-                "id": 19,
-                "title": "Goodbye",
-                "is_answer": false
-              }
-            ]
-          },
-          {
-            "id": 4,
-            "title": "question 1",
-            "question_type_id": 2,
-            "question_options": [
-              {
-                "id": 3,
-                "title": "False",
-                "is_answer": true
-              },
-              {
-                "id": 15,
-                "title": "True",
-                "is_answer": false
-              }
-            ]
-          }
-        ]
-      }
-    }
-  }
+  const expectedResponse = quizResponseFromHasura
 
   fetch.mockImplementation(() => Promise.resolve({ json: () => expectedResponse }))
 
@@ -237,4 +239,30 @@ test("[getOldQuiz] Retrieve old quiz from hasura with invalid query", async () =
 
   expect(status).toBe(500)
   expect(message).toEqual(expect.any(String))
+})
+
+test("[getChanges] Retieve update mutations for quiz changes", async () => {
+  const oldQuizResponse = quizResponseFromHasura
+  const expectedResponse = [
+    `update_quiz_by_pk(pk_columns: {id: 8}, _set: {section_id: 1, time_limit: 1, title: "Updated Quiz 3"}) {
+      id
+    }`,
+    `update_question_by_pk(pk_columns: {id: 4}, _set: {title: "New Question 1", question_type_id: 2}) {
+      id
+    }`,
+    `update_question_option_by_pk(pk_columns: {id: 3}, _set: {is_answer: false, title: "False"}) {
+      id
+    }`,
+    `update_question_option_by_pk(pk_columns: {id: 15}, _set: {is_answer: true, title: "True"}) {
+      id
+    }`
+  ]
+
+  fetch.mockImplementation(() => Promise.resolve({ json: () => oldQuizResponse }))
+
+  const { input: newQuiz, userRole } = retrieveBodyData(validMockData)
+  const { data: { quiz_by_pk: oldQuiz } } = await getOldQuiz(userRole, 8)
+
+  const changes = getChanges(oldQuiz, newQuiz)
+  expect(changes).toBe(expectedResponse)
 })
