@@ -100,8 +100,8 @@ function changesForQuestion (oldQuestions, newQuestions) {
 
       if (oldTitle !== newTitle || oldQuestionTypeId !== newQuestionTypeId) {
         mutations.push(`update_question_by_pk(pk_columns: {id: ${id}}, _set: {title: "${newTitle}", question_type_id: ${newQuestionTypeId}}) {
-          id
-        }`)
+      id
+    }`)
 
         changesForOptions(oldQuestion.question_options, newQuestion.question_options.data)
           .forEach(option => mutations.push(option))
@@ -133,8 +133,8 @@ function changesForOptions (oldOptions, newOptions) {
 
       if (oldTitle !== newTitle || oldAnswer !== newAnswer) {
         mutations.push(`update_question_option_by_pk(pk_columns: {id: ${id}}, _set: {is_answer: ${newAnswer}, title: "${newTitle}"}) {
-          id
-        }`)
+      id
+    }`)
       }
     }
   }
