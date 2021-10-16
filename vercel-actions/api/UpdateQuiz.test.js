@@ -181,7 +181,7 @@ test("[retrieveBodyData] Empty input", () => {
 
 test("[retrieveBodyData] Populated input", () => {
   const retrievedData = retrieveBodyData(validMockData)
-  expect(retrievedData).toEqual({ input: validMockData.input.object, userRole: validMockData.session_variables["x-hasura-user-id"] })
+  expect(retrievedData).toEqual({ input: validMockData.input.object, userRole: validMockData.session_variables["x-hasura-role"] })
 })
 
 test("[handleProcess] Return results to hasura", () => {
