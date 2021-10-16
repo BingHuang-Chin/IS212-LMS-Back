@@ -247,7 +247,7 @@ test("[getChanges] Retieve update mutations for quiz changes", async () => {
     `update_quiz_by_pk(pk_columns: {id: 8}, _set: {section_id: 1, time_limit: 1, title: "Updated Quiz 3"}) {
       id
     }`,
-    `update_question_by_pk(pk_columns: {id: 4}, _set: {title: "New Question 1", question_type_id: 2}) {
+    `update_question_by_pk(pk_columns: {id: 4}, _set: {title: "New question 1", question_type_id: 2}) {
       id
     }`,
     `update_question_option_by_pk(pk_columns: {id: 3}, _set: {is_answer: false, title: "False"}) {
@@ -264,5 +264,5 @@ test("[getChanges] Retieve update mutations for quiz changes", async () => {
   const { data: { quiz_by_pk: oldQuiz } } = await getOldQuiz(userRole, 8)
 
   const changes = getChanges(oldQuiz, newQuiz)
-  expect(changes).toBe(expectedResponse)
+  expect(changes).toStrictEqual(expectedResponse)
 })
