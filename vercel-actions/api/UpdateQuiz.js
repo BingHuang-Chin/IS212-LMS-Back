@@ -1,11 +1,14 @@
 const fetch = require("node-fetch")
 
-const vercelFn = (request, response) => {
-  const { error: bodyDataError, input } = retrieveBodyData(request.body)
+const vercelFn = async (request, response) => {
+  const { error: bodyDataError, input, userRole } = retrieveBodyData(request.body)
   if (bodyDataError) return response.json(error)
 
-  const { error: oldQuizError, data: oldQuizData } = getOldQuiz(8)
+  const { error: oldQuizError, data: oldQuizData } = await getOldQuiz(userRole, input.id)
   if (oldQuizError) return response.json(error)
+
+  const changes = getChanges(oldQuizData.quiz_by_pk, input)
+  console.log(changes)
 
   return response.json(handleProcess(input))
 }
@@ -16,51 +19,57 @@ function handleProcess (quizChanges) {
 
 function retrieveBodyData (body) {
   if (body && body.input && body.session_variables)
-    return { input: body.input.object, userRole: body.session_variables["x-hasura-user-id"] }
+    return { input: body.input.object, userRole: body.session_variables["x-hasura-role"] }
 
   return { error: { status: 400, message: "Invalid input provided." } }
 }
 
-async function getOldQuiz (role, quizId) {
-  const response = await fetch(process.env.HASURA_ENDPOINT, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-hasura-admin-secret": process.env.HASURA_ADMIN_SECRET,
-      "x-hasura-role": role
-    },
-    body: JSON.stringify({
-      query: `
-        query {
-          quiz_by_pk(id: ${quizId}) {
-            id
-            title
-            time_limit
-            section_id
-            questions {
+function getOldQuiz (role, quizId) {
+  return new Promise(resolve => {
+    fetch(process.env.HASURA_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-hasura-admin-secret": process.env.HASURA_ADMIN_SECRET,
+        "x-hasura-role": role
+      },
+      body: JSON.stringify({
+        query: `
+          query {
+            quiz_by_pk(id: ${quizId}) {
               id
               title
-              question_type_id
-              question_options {
+              time_limit
+              section_id
+              questions {
                 id
                 title
-                is_answer
+                question_type_id
+                question_options {
+                  id
+                  title
+                  is_answer
+                }
               }
             }
           }
-        }
-      `
+        `
+      })
     })
+      .then(response => response.json())
+      .then(({ errors, data }) => {
+        if (errors)
+          return resolve({ error: { status: 500, message: "Internal server error." } })
+
+        if (!data.quiz_by_pk)
+          resolve({ error: { status: 404, message: "Quiz not found." } })
+
+        resolve({ data: { ...data, status: 200 } })
+      })
+      .catch(() => {
+        resolve({ error: { status: 500, message: "Internal server error." } })
+      })
   })
-
-  const { errors, data } = await response.json()
-  if (errors)
-    return { error: { status: 500, message: "Internal server error." } }
-
-  if (!data.quiz_by_pk)
-    return { error: { status: 404, message: "Quiz not found." } }
-
-  return { data: { ...data, status: 200 } }
 }
 
 function getChanges (oldQuiz, newQuiz) {
@@ -109,7 +118,7 @@ function changesForQuestion (oldQuestions, newQuestions) {
     }
   }
 
-  const getDeletedQuestions = (oldOptions, newOptions) => {
+  const getDeletedQuestions = () => {
     // TODO: Handle questions which are deleted
   }
 
