@@ -8,12 +8,12 @@ const vercelFn = async (request, response) => {
   if (oldQuizError) return response.json(error)
 
   const changes = getChanges(oldQuizData.quiz_by_pk, input)
-  if (changes.length > 0) {
-    const gqlQuery = convertToGqlQuery(changes)
-    await updateQuiz(userRole, gqlQuery)
-  }
+  if (changes.length === 0)
+    return response.json({ status: 400, message: "No changes found." })
 
-  return response.json({ hello: "world" })
+  const gqlQuery = convertToGqlQuery(changes)
+  const { error: updateQuizError, data: updatedQuizResponse } = await updateQuiz(userRole, gqlQuery)
+  return response.json(updateQuizError ? updateQuizError : updatedQuizResponse)
 }
 
 function retrieveBodyData (body) {
@@ -181,9 +181,8 @@ function updateQuiz (role, gqlQuery) {
       },
       body: JSON.stringify({ query: gqlQuery })
     })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
+      .then(() => {
+        resolve({ data: { status: 200, message: "Updated successfully." } })
       })
       .catch(() => {
         resolve({ error: { status: 500, message: "Internal server error." } })
