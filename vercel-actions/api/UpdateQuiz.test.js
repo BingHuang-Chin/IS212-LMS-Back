@@ -1,5 +1,5 @@
 const fetch = require("node-fetch")
-const { handleProcess, retrieveBodyData, getOldQuiz, getChanges, convertToGqlQuery } = require("./UpdateQuiz")
+const { retrieveBodyData, getOldQuiz, getChanges, convertToGqlQuery } = require("./UpdateQuiz")
 
 jest.mock("node-fetch", () => jest.fn())
 
@@ -182,13 +182,6 @@ test("[retrieveBodyData] Empty input", () => {
 test("[retrieveBodyData] Populated input", () => {
   const retrievedData = retrieveBodyData(validMockData)
   expect(retrievedData).toEqual({ input: validMockData.input.object, userRole: validMockData.session_variables["x-hasura-role"] })
-})
-
-test("[handleProcess] Return results to hasura", () => {
-  const { input } = retrieveBodyData(validMockData)
-  const result = handleProcess(input)
-
-  expect(result).toEqual({ hello: "bye" })
 })
 
 test("[getOldQuiz] Retrieve valid old quiz from Hausra", async () => {
