@@ -8,13 +8,12 @@ const vercelFn = async (request, response) => {
   if (oldQuizError) return response.json(error)
 
   const changes = getChanges(oldQuizData.quiz_by_pk, input)
-  const gqlQuery = convertToGqlQuery(changes)
+  if (changes.length > 0) {
+    const gqlQuery = convertToGqlQuery(changes)
+    await updateQuiz(userRole, gqlQuery)
+  }
 
-  return response.json(handleProcess(input))
-}
-
-function handleProcess (quizChanges) {
-  return { hello: "bye" }
+  return response.json({ hello: "world" })
 }
 
 function retrieveBodyData (body) {
@@ -171,8 +170,28 @@ function convertToGqlQuery (changes) {
 ${consolidatedQuery}}`
 }
 
+function updateQuiz (role, gqlQuery) {
+  return new Promise(resolve => {
+    fetch(process.env.HASURA_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-hasura-admin-secret": process.env.HASURA_ADMIN_SECRET,
+        "x-hasura-role": role
+      },
+      body: JSON.stringify({ query: gqlQuery })
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+      })
+      .catch(() => {
+        resolve({ error: { status: 500, message: "Internal server error." } })
+      })
+  })
+}
+
 module.exports = {
-  handleProcess,
   retrieveBodyData,
   getOldQuiz,
   getChanges,
