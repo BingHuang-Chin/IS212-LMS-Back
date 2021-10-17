@@ -385,7 +385,7 @@ test("[getChanges] Retieve update mutations for new quiz question", async () => 
     `update_question_option_by_pk(pk_columns: {id: 15}, _set: {is_answer: true, title: "True"}) {
       id
     }`,
-    `insert_question_one(object: {title: "New question 4", quiz_id: 8, question_type_id: 2, question_options: {data: [{is_answer: false, title: "False"}, {is_answer: false, title: "True"}]}}) {
+    `insert_question_one(object: {title: "New question 4", quiz_id: 8, question_type_id: 2, question_options: {data: [{is_answer: false, title: "False"},{is_answer: true, title: "True"}]}}) {
       id
     }`
   ]
