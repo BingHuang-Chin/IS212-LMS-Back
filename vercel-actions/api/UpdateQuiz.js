@@ -73,7 +73,7 @@ function getOldQuiz (role, quizId) {
 
 function getChanges (oldQuiz, newQuiz) {
   const quizChanges = changesForQuizInformation(oldQuiz, newQuiz)
-  const questionChanges = changesForQuestion(oldQuiz.questions, newQuiz.questions.data)
+  const questionChanges = changesForQuestion(oldQuiz.questions, newQuiz.questions.data, oldQuiz.id)
 
   return quizChanges.concat(questionChanges)
 }
@@ -86,43 +86,48 @@ function changesForQuizInformation (oldQuiz, newQuiz) {
 
   if (oldTitle !== newTitle || oldTimeLimit !== newTimeLimit || oldSectionId !== newSectionId) {
     mutations.push(`update_quiz_by_pk(pk_columns: {id: ${id}}, _set: {section_id: ${newSectionId}, time_limit: ${newTimeLimit}, title: "${newTitle}"}) {
-      id
-    }`)
+                      id
+                    }`)
   }
 
   return mutations
 }
 
-function changesForQuestion (oldQuestions, newQuestions) {
+function changesForQuestion (oldQuestions, newQuestions, quizId) {
   const mutations = []
   const getNewAndUpdatedQuestions = () => {
     for (const newQuestion of newQuestions) {
-      const oldQuestion = oldQuestions.find(oldQuestion => oldQuestion.id === newQuestion.id)
-      if (!oldQuestion) {
-        // TOOD: Handle insert
-        return
+      if (newQuestion.id) {
+        const oldQuestion = oldQuestions.find(oldQuestion => oldQuestion.id === newQuestion.id)
+        if (!oldQuestion) {
+          // TOOD: Handle remove
+          return
+        }
+
+        const { id, title: oldTitle, question_type_id: oldQuestionTypeId } = oldQuestion
+        const { title: newTitle, question_type_id: newQuestionTypeId } = newQuestion
+
+        if (oldTitle !== newTitle || oldQuestionTypeId !== newQuestionTypeId) {
+          mutations.push(`update_question_by_pk(pk_columns: {id: ${id}}, _set: {title: "${newTitle}", question_type_id: ${newQuestionTypeId}}) {
+                            id
+                          }`)
+        }
+
+        changesForOptions(oldQuestion.question_options, newQuestion.question_options.data)
+          .forEach(option => mutations.push(option))
+
+        continue
       }
 
-      const { id, title: oldTitle, question_type_id: oldQuestionTypeId } = oldQuestion
       const { title: newTitle, question_type_id: newQuestionTypeId } = newQuestion
-
-      if (oldTitle !== newTitle || oldQuestionTypeId !== newQuestionTypeId) {
-        mutations.push(`update_question_by_pk(pk_columns: {id: ${id}}, _set: {title: "${newTitle}", question_type_id: ${newQuestionTypeId}}) {
-      id
-    }`)
-      }
-
-      changesForOptions(oldQuestion.question_options, newQuestion.question_options.data)
-        .forEach(option => mutations.push(option))
+      const questionOptions = getQuestionOptions(newQuestion.question_options.data)
+      mutations.push(`insert_question_one(object: {title: "${newTitle}", quiz_id: ${quizId}, question_type_id: ${newQuestionTypeId}, question_options: {data: ${questionOptions}}}) {
+                        id
+                      }`)
     }
   }
 
-  const getDeletedQuestions = () => {
-    // TODO: Handle questions which are deleted
-  }
-
   getNewAndUpdatedQuestions()
-  getDeletedQuestions()
   return mutations
 }
 
@@ -132,7 +137,7 @@ function changesForOptions (oldOptions, newOptions) {
     for (const newOption of newOptions) {
       const oldOption = oldOptions.find(oldOption => oldOption.id === newOption.id)
       if (!oldOption) {
-        // TODO: Handle insert
+        // TODO: Handle remove
         return
       }
 
@@ -141,19 +146,25 @@ function changesForOptions (oldOptions, newOptions) {
 
       if (oldTitle !== newTitle || oldAnswer !== newAnswer) {
         mutations.push(`update_question_option_by_pk(pk_columns: {id: ${id}}, _set: {is_answer: ${newAnswer}, title: "${newTitle}"}) {
-      id
-    }`)
+                          id
+                        }`)
       }
     }
   }
 
-  const getDeletedOptions = () => {
-    // TODO: Handle options which are deleted
-  }
-
   getNewAndUpdatedOptions()
-  getDeletedOptions()
   return mutations
+}
+
+function getQuestionOptions (options) {
+  let insertOptions = ""
+
+  options.forEach(option => {
+    const { is_answer, title } = option
+    insertOptions += `{is_answer: ${is_answer}, title: "${title}"},`
+  })
+
+  return `[${insertOptions.slice(0, -1)}]`
 }
 
 function convertToGqlQuery (changes) {
