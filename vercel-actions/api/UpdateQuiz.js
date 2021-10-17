@@ -8,7 +8,7 @@ const vercelFn = async (request, response) => {
   if (oldQuizError) return response.json(error)
 
   const changes = getChanges(oldQuizData.quiz_by_pk, input)
-  console.log(changes)
+  const gqlQuery = convertToGqlQuery(changes)
 
   return response.json(handleProcess(input))
 }
@@ -111,10 +111,10 @@ function changesForQuestion (oldQuestions, newQuestions) {
         mutations.push(`update_question_by_pk(pk_columns: {id: ${id}}, _set: {title: "${newTitle}", question_type_id: ${newQuestionTypeId}}) {
       id
     }`)
-
-        changesForOptions(oldQuestion.question_options, newQuestion.question_options.data)
-          .forEach(option => mutations.push(option))
       }
+
+      changesForOptions(oldQuestion.question_options, newQuestion.question_options.data)
+        .forEach(option => mutations.push(option))
     }
   }
 
@@ -157,10 +157,25 @@ function changesForOptions (oldOptions, newOptions) {
   return mutations
 }
 
+function convertToGqlQuery (changes) {
+  let consolidatedQuery = ""
+  changes.forEach((change, index) => {
+    consolidatedQuery += `  _${index}: ${change}
+`
+  })
+
+  if (changes.length === 0)
+    return ""
+
+  return `mutation {
+${consolidatedQuery}}`
+}
+
 module.exports = {
   handleProcess,
   retrieveBodyData,
   getOldQuiz,
   getChanges,
+  convertToGqlQuery,
   default: vercelFn
 }
