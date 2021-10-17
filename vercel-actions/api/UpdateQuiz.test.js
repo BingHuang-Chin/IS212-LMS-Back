@@ -1,5 +1,5 @@
 const fetch = require("node-fetch")
-const { handleProcess, retrieveBodyData, getOldQuiz, getChanges } = require("./UpdateQuiz")
+const { handleProcess, retrieveBodyData, getOldQuiz, getChanges, convertToGqlQuery } = require("./UpdateQuiz")
 
 jest.mock("node-fetch", () => jest.fn())
 
@@ -265,4 +265,32 @@ test("[getChanges] Retieve update mutations for quiz changes", async () => {
 
   const changes = getChanges(oldQuiz, newQuiz)
   expect(changes).toStrictEqual(expectedResponse)
+})
+
+test("[convertToGqlQuery] Converts changes to hasura mutation query", async () => {
+  const expectedResponse = 
+`mutation {
+  _0: update_quiz_by_pk(pk_columns: {id: 8}, _set: {section_id: 1, time_limit: 1, title: "Updated Quiz 3"}) {
+      id
+    }
+  _1: update_question_by_pk(pk_columns: {id: 4}, _set: {title: "New question 1", question_type_id: 2}) {
+      id
+    }
+  _2: update_question_option_by_pk(pk_columns: {id: 3}, _set: {is_answer: false, title: "False"}) {
+      id
+    }
+  _3: update_question_option_by_pk(pk_columns: {id: 15}, _set: {is_answer: true, title: "True"}) {
+      id
+    }
+}`
+
+  const oldQuizResponse = quizResponseFromHasura
+  fetch.mockImplementation(() => Promise.resolve({ json: () => oldQuizResponse }))
+
+  const { input: newQuiz, userRole } = retrieveBodyData(validMockData)
+  const { data: { quiz_by_pk: oldQuiz } } = await getOldQuiz(userRole, 8)
+
+  const changes = getChanges(oldQuiz, newQuiz)
+  const hasuraQuery = convertToGqlQuery(changes)
+  expect(hasuraQuery).toEqual(expectedResponse)
 })
