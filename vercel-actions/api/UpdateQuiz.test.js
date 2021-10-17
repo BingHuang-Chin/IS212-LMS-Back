@@ -346,16 +346,16 @@ test("[getChanges] Retieve update mutations for quiz changes", async () => {
   const expectedResponse = [
     `update_quiz_by_pk(pk_columns: {id: 8}, _set: {section_id: 1, time_limit: 1, title: "Updated Quiz 3"}) {
       id
-    }`,
+    }`.replace(/(\n|\s)/g, ''),
     `update_question_by_pk(pk_columns: {id: 4}, _set: {title: "New question 1", question_type_id: 2}) {
       id
-    }`,
+    }`.replace(/(\n|\s)/g, ''),
     `update_question_option_by_pk(pk_columns: {id: 3}, _set: {is_answer: false, title: "False"}) {
       id
-    }`,
+    }`.replace(/(\n|\s)/g, ''),
     `update_question_option_by_pk(pk_columns: {id: 15}, _set: {is_answer: true, title: "True"}) {
       id
-    }`
+    }`.replace(/(\n|\s)/g, '')
   ]
 
   fetch.mockImplementation(() => Promise.resolve({ json: () => oldQuizResponse }))
@@ -364,6 +364,7 @@ test("[getChanges] Retieve update mutations for quiz changes", async () => {
   const { data: { quiz_by_pk: oldQuiz } } = await getOldQuiz(userRole, 8)
 
   const changes = getChanges(oldQuiz, newQuiz)
+    .map(change => change.replace(/(\n|\s)/g, ''))
   expect(changes).toStrictEqual(expectedResponse)
 })
 
@@ -372,22 +373,19 @@ test("[getChanges] Retieve update mutations for new quiz question", async () => 
   const expectedResponse = [
     `update_quiz_by_pk(pk_columns: {id: 8}, _set: {section_id: 1, time_limit: 1, title: "Updated Quiz 3"}) {
       id
-    }`,
+    }`.replace(/(\n|\s)/g, ''),
     `update_question_by_pk(pk_columns: {id: 4}, _set: {title: "New question 1", question_type_id: 2}) {
       id
-    }`,
+    }`.replace(/(\n|\s)/g, ''),
     `update_question_option_by_pk(pk_columns: {id: 3}, _set: {is_answer: false, title: "False"}) {
       id
-    }`,
+    }`.replace(/(\n|\s)/g, ''),
     `update_question_option_by_pk(pk_columns: {id: 15}, _set: {is_answer: true, title: "True"}) {
       id
-    }`,
-    `update_question_option_by_pk(pk_columns: {id: 15}, _set: {is_answer: true, title: "True"}) {
-      id
-    }`,
+    }`.replace(/(\n|\s)/g, ''),
     `insert_question_one(object: {title: "New question 4", quiz_id: 8, question_type_id: 2, question_options: {data: [{is_answer: false, title: "False"},{is_answer: true, title: "True"}]}}) {
       id
-    }`
+    }`.replace(/(\n|\s)/g, '')
   ]
 
   fetch.mockImplementation(() => Promise.resolve({ json: () => oldQuizResponse }))
@@ -396,25 +394,26 @@ test("[getChanges] Retieve update mutations for new quiz question", async () => 
   const { data: { quiz_by_pk: oldQuiz } } = await getOldQuiz(userRole, 8)
 
   const changes = getChanges(oldQuiz, newQuiz)
+    .map(change => change.replace(/(\n|\s)/g, ''))
   expect(changes).toStrictEqual(expectedResponse)
 })
 
 test("[convertToGqlQuery] Converts changes to hasura mutation query", async () => {
   const expectedResponse =
     `mutation {
-  _0: update_quiz_by_pk(pk_columns: {id: 8}, _set: {section_id: 1, time_limit: 1, title: "Updated Quiz 3"}) {
-      id
-    }
-  _1: update_question_by_pk(pk_columns: {id: 4}, _set: {title: "New question 1", question_type_id: 2}) {
-      id
-    }
-  _2: update_question_option_by_pk(pk_columns: {id: 3}, _set: {is_answer: false, title: "False"}) {
-      id
-    }
-  _3: update_question_option_by_pk(pk_columns: {id: 15}, _set: {is_answer: true, title: "True"}) {
-      id
-    }
-}`
+      _0: update_quiz_by_pk(pk_columns: {id: 8}, _set: {section_id: 1, time_limit: 1, title: "Updated Quiz 3"}) {
+          id
+        }
+      _1: update_question_by_pk(pk_columns: {id: 4}, _set: {title: "New question 1", question_type_id: 2}) {
+          id
+        }
+      _2: update_question_option_by_pk(pk_columns: {id: 3}, _set: {is_answer: false, title: "False"}) {
+          id
+        }
+      _3: update_question_option_by_pk(pk_columns: {id: 15}, _set: {is_answer: true, title: "True"}) {
+          id
+        }
+    }`.replace(/(\n|\s)/g, '')
 
   const oldQuizResponse = quizResponseFromHasura
   fetch.mockImplementation(() => Promise.resolve({ json: () => oldQuizResponse }))
@@ -423,6 +422,6 @@ test("[convertToGqlQuery] Converts changes to hasura mutation query", async () =
   const { data: { quiz_by_pk: oldQuiz } } = await getOldQuiz(userRole, 8)
 
   const changes = getChanges(oldQuiz, newQuiz)
-  const hasuraQuery = convertToGqlQuery(changes)
+  const hasuraQuery = convertToGqlQuery(changes).replace(/(\n|\s)/g, '')
   expect(hasuraQuery).toEqual(expectedResponse)
 })
