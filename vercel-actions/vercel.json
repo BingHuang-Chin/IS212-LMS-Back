@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "use": "@vercel/node@latest",
+      "src": "api/*.js",
+      "config": { "zeroConfig": true }
+    },
+    {
+      "use": "@vercel/python@latest",
+      "src": "api/*.py",
+      "config": { "zeroConfig": true }
+    }
+  ]
+}
