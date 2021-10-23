@@ -145,10 +145,8 @@ function changesForOptions (oldOptions, newOptions) {
   const getNewAndUpdatedOptions = () => {
     for (const newOption of newOptions) {
       const oldOption = oldOptions.find(oldOption => oldOption.id === newOption.id)
-      if (!oldOption) {
-        // TODO: Handle remove
+      if (!oldOption)
         return
-      }
 
       const { id, is_answer: oldAnswer, title: oldTitle } = oldOption
       const { is_answer: newAnswer, title: newTitle } = newOption
@@ -161,7 +159,18 @@ function changesForOptions (oldOptions, newOptions) {
     }
   }
 
+  const getRemovedOptions = () => {
+    for (const oldOption of oldOptions) {
+      const newOption = newOptions.find(newOption => newOption.id === oldOption.id)
+      if (!newOption)
+        mutations.push(`delete_question_option_by_pk(id: ${oldOption.id}) {
+                          id
+                        }`)
+    }
+  }
+
   getNewAndUpdatedOptions()
+  getRemovedOptions()
   return mutations
 }
 
