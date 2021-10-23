@@ -499,6 +499,9 @@ test("[getChanges] Retieve update mutations for new question option", async () =
     `update_quiz_by_pk(pk_columns: {id: 8}, _set: {section_id: 1, time_limit: 1, title: "Updated Quiz 3"}) {
       id
     }`.replace(/(\n|\s)/g, ''),
+    `insert_question_option_one(object: {is_answer: false, question_id: 10, title: "This is new"}) {
+      id
+    }`.replace(/(\n|\s)/g, ''),
     `update_question_by_pk(pk_columns: {id: 4}, _set: {title: "New question 1", question_type_id: 2}) {
       id
     }`.replace(/(\n|\s)/g, ''),
@@ -506,12 +509,6 @@ test("[getChanges] Retieve update mutations for new question option", async () =
       id
     }`.replace(/(\n|\s)/g, ''),
     `update_question_option_by_pk(pk_columns: {id: 15}, _set: {is_answer: true, title: "True"}) {
-      id
-    }`.replace(/(\n|\s)/g, ''),
-    `update_question_option_by_pk(pk_columns: {id: 15}, _set: {is_answer: true, title: "True"}) {
-      id
-    }`.replace(/(\n|\s)/g, ''),
-    `insert_question_option_one(object: {is_answer: false, question_id: 10, title: "This is new"}) {
       id
     }`.replace(/(\n|\s)/g, '')
   ]
