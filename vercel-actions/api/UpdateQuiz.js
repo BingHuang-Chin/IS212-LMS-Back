@@ -111,7 +111,7 @@ function changesForQuestion (oldQuestions, newQuestions, quizId) {
                           }`)
         }
 
-        changesForOptions(oldQuestion.question_options, newQuestion.question_options.data)
+        changesForOptions(oldQuestion.question_options, newQuestion.question_options.data, id)
           .forEach(option => mutations.push(option))
 
         continue
@@ -140,22 +140,30 @@ function changesForQuestion (oldQuestions, newQuestions, quizId) {
   return mutations
 }
 
-function changesForOptions (oldOptions, newOptions) {
+function changesForOptions (oldOptions, newOptions, questionId) {
   const mutations = []
   const getNewAndUpdatedOptions = () => {
     for (const newOption of newOptions) {
-      const oldOption = oldOptions.find(oldOption => oldOption.id === newOption.id)
-      if (!oldOption)
-        return
+      if (newOption.id) {
+        const oldOption = oldOptions.find(oldOption => oldOption.id === newOption.id)
+        if (!oldOption)
+          return
 
-      const { id, is_answer: oldAnswer, title: oldTitle } = oldOption
-      const { is_answer: newAnswer, title: newTitle } = newOption
-
-      if (oldTitle !== newTitle || oldAnswer !== newAnswer) {
-        mutations.push(`update_question_option_by_pk(pk_columns: {id: ${id}}, _set: {is_answer: ${newAnswer}, title: "${newTitle}"}) {
+        const { id, is_answer: oldAnswer, title: oldTitle } = oldOption
+        const { is_answer: newAnswer, title: newTitle } = newOption
+        if (oldTitle !== newTitle || oldAnswer !== newAnswer) {
+          mutations.push(`update_question_option_by_pk(pk_columns: {id: ${id}}, _set: {is_answer: ${newAnswer}, title: "${newTitle}"}) {
                           id
                         }`)
+        }
+
+        continue
       }
+
+      const { is_answer, title } = newOption
+      mutations.push(`insert_question_option_one(object: {is_answer: ${is_answer}, question_id: ${questionId}, title: "${title}"}) {
+                        id
+                      }`)
     }
   }
 
