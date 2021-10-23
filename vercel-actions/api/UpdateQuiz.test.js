@@ -280,6 +280,101 @@ const validNewQuestionMockInput = {
   }
 }
 
+const validNewQuestionOptionMockInput = {
+  session_variables: {
+    'x-hasura-role': 'trainer',
+    'x-hasura-user-id': 'auth0|614dfc64c69eb200704771b8'
+  },
+  input: {
+    "object": {
+      "title": "Updated Quiz 3",
+      "section_id": 1,
+      "time_limit": 1,
+      "questions": {
+        "data": [
+          {
+            "title": "New question 2",
+            "question_type_id": 1,
+            "question_options": {
+              "data": [
+                {
+                  "is_answer": false,
+                  "title": "some option 3",
+                  "id": 6
+                },
+                {
+                  "is_answer": true,
+                  "title": "some option 6",
+                  "id": 16
+                },
+                {
+                  "is_answer": false,
+                  "title": "some option 7",
+                  "id": 17
+                },
+                {
+                  "is_answer": false,
+                  "title": "some option 8",
+                  "id": 21
+                }
+              ]
+            },
+            "id": 5
+          },
+          {
+            "title": "Question 3",
+            "question_type_id": 1,
+            "question_options": {
+              "data": [
+                {
+                  "is_answer": false,
+                  "title": "Goodnight",
+                  "id": 20
+                },
+                {
+                  "is_answer": true,
+                  "title": "Hello world",
+                  "id": 18
+                },
+                {
+                  "is_answer": false,
+                  "title": "Goodbye",
+                  "id": 19
+                },
+                {
+                  "is_answer": false,
+                  "title": "This is new"
+                }
+              ]
+            },
+            "id": 10
+          },
+          {
+            "title": "New question 1",
+            "question_type_id": 2,
+            "question_options": {
+              "data": [
+                {
+                  "is_answer": false,
+                  "title": "False",
+                  "id": 3
+                },
+                {
+                  "is_answer": true,
+                  "title": "True",
+                  "id": 15
+                }
+              ]
+            },
+            "id": 4
+          }
+        ]
+      },
+      "id": 8
+    }
+  }
+}
+
 test("[retrieveBodyData] Empty input", () => {
   const mockQuizChanges = {}
   const retrievedData = retrieveBodyData(mockQuizChanges)
@@ -391,6 +486,39 @@ test("[getChanges] Retieve update mutations for new quiz question", async () => 
   fetch.mockImplementation(() => Promise.resolve({ json: () => oldQuizResponse }))
 
   const { input: newQuiz, userRole } = retrieveBodyData(validNewQuestionMockInput)
+  const { data: { quiz_by_pk: oldQuiz } } = await getOldQuiz(userRole, 8)
+
+  const changes = getChanges(oldQuiz, newQuiz)
+    .map(change => change.replace(/(\n|\s)/g, ''))
+  expect(changes).toStrictEqual(expectedResponse)
+})
+
+test("[getChanges] Retieve update mutations for new question option", async () => {
+  const oldQuizResponse = quizResponseFromHasura
+  const expectedResponse = [
+    `update_quiz_by_pk(pk_columns: {id: 8}, _set: {section_id: 1, time_limit: 1, title: "Updated Quiz 3"}) {
+      id
+    }`.replace(/(\n|\s)/g, ''),
+    `update_question_by_pk(pk_columns: {id: 4}, _set: {title: "New question 1", question_type_id: 2}) {
+      id
+    }`.replace(/(\n|\s)/g, ''),
+    `update_question_option_by_pk(pk_columns: {id: 3}, _set: {is_answer: false, title: "False"}) {
+      id
+    }`.replace(/(\n|\s)/g, ''),
+    `update_question_option_by_pk(pk_columns: {id: 15}, _set: {is_answer: true, title: "True"}) {
+      id
+    }`.replace(/(\n|\s)/g, ''),
+    `update_question_option_by_pk(pk_columns: {id: 15}, _set: {is_answer: true, title: "True"}) {
+      id
+    }`.replace(/(\n|\s)/g, ''),
+    `insert_question_option_one(object: {is_answer: false, question_id: 10, title: "This is new"}) {
+      id
+    }`.replace(/(\n|\s)/g, '')
+  ]
+
+  fetch.mockImplementation(() => Promise.resolve({ json: () => oldQuizResponse }))
+
+  const { input: newQuiz, userRole } = retrieveBodyData(validNewQuestionOptionMockInput)
   const { data: { quiz_by_pk: oldQuiz } } = await getOldQuiz(userRole, 8)
 
   const changes = getChanges(oldQuiz, newQuiz)
