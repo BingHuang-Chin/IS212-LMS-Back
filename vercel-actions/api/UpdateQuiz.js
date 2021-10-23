@@ -99,10 +99,8 @@ function changesForQuestion (oldQuestions, newQuestions, quizId) {
     for (const newQuestion of newQuestions) {
       if (newQuestion.id) {
         const oldQuestion = oldQuestions.find(oldQuestion => oldQuestion.id === newQuestion.id)
-        if (!oldQuestion) {
-          // TOOD: Handle remove
+        if (!oldQuestion)
           return
-        }
 
         const { id, title: oldTitle, question_type_id: oldQuestionTypeId } = oldQuestion
         const { title: newTitle, question_type_id: newQuestionTypeId } = newQuestion
@@ -127,7 +125,18 @@ function changesForQuestion (oldQuestions, newQuestions, quizId) {
     }
   }
 
+  const getRemovedQuestions = () => {
+    for (const oldQuestion of oldQuestions) {
+      const newQuestion = newQuestions.find(newQuestion => newQuestion.id === oldQuestion.id)
+      if (!newQuestion)
+        mutations.push(`delete_question_by_pk(id: ${oldQuestion.id}) {
+                          id
+                        }`)
+    }
+  }
+
   getNewAndUpdatedQuestions()
+  getRemovedQuestions()
   return mutations
 }
 
