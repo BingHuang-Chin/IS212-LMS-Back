@@ -17,7 +17,7 @@ input UpdateQuizQuestionDataInput {
 }
 
 input UpdateQuizQuestionInput {
-  id: Int!
+  id: Int
   question_type_id: Int!
   title: String!
   question_options: UpdateQuizOptionDataInput!
@@ -30,7 +30,7 @@ input UpdateQuizOptionDataInput {
 input UpdateQuizOptionInput {
   is_answer: Boolean!
   title: String!
-  id: Int!
+  id: Int
 }
 
 type UpdateQuizOutput {
