@@ -1,6 +1,19 @@
-actions: []
+actions:
+- name: updateQuiz
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/UpdateQuiz'
+    forward_client_headers: true
+  permissions:
+  - role: trainer
 custom_types:
   enums: []
-  input_objects: []
-  objects: []
+  input_objects:
+  - name: UpdateQuizInput
+  - name: UpdateQuizQuestionDataInput
+  - name: UpdateQuizQuestionInput
+  - name: UpdateQuizOptionDataInput
+  - name: UpdateQuizOptionInput
+  objects:
+  - name: UpdateQuizOutput
   scalars: []
