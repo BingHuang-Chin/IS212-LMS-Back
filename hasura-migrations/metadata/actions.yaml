@@ -6,6 +6,11 @@ actions:
     forward_client_headers: true
   permissions:
   - role: trainer
+actions:
+- name: selfEnrol
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/API/selfEnrol'
 custom_types:
   enums: []
   input_objects:
@@ -16,4 +21,8 @@ custom_types:
   - name: UpdateQuizOptionInput
   objects:
   - name: UpdateQuizOutput
+  input_objects:
+  - name: selfEnrolInput
+  objects:
+  - name: selfEnrolOutput
   scalars: []
