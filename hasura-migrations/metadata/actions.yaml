@@ -1,6 +1,12 @@
-actions: []
+actions:
+- name: selfEnrol
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/API/selfEnrol'
 custom_types:
   enums: []
-  input_objects: []
-  objects: []
+  input_objects:
+  - name: selfEnrolInput
+  objects:
+  - name: selfEnrolOutput
   scalars: []

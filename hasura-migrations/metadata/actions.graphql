@@ -1,0 +1,16 @@
+type Mutation {
+  selfEnrol (
+    self_enrol: selfEnrolInput!
+  ): selfEnrolOutput
+}
+
+input selfEnrolInput {
+  learnerId : Int!
+  courseID : Int!
+}
+
+type selfEnrolOutput {
+  sucess : Boolean!
+  message : String!
+}
+

@@ -8,6 +8,16 @@ const selfEnrol = (learnerId, courseId) => {
     return true
 }
 
+const checkEnrolmentEndDate = (enrolment_end_date) => {
+    //TODO: Processing
+    var checkQuery = `query {
+            course(where: {enrolment_end_date: {_gte: "${enrolment_end_date}"}}) {
+            enrolment_end_date
+            id
+            }
+        }`  
+}
+
 module.exports = {
     selfEnrol,
     default : vercelFn
