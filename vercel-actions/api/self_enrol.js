@@ -24,8 +24,8 @@ function checkEnrolmentEndDate (enrolment_end_date, role) {
             method: "POST",
             headers: {
             "Content-Type": "application/json",
-            "x-hasura-admin-secret": "myadminsecretkey"
-            // "x-hasura-role": role
+            "x-hasura-admin-secret": "myadminsecretkey",
+            "x-hasura-role": role
             },
             body: JSON.stringify({
             query: checkQuery
