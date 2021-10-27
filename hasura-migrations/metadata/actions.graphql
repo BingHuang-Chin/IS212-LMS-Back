@@ -3,6 +3,7 @@ type Mutation {
     object: UpdateQuizInput!
   ): UpdateQuizOutput
 }
+
 type Mutation {
   selfEnrol (
     self_enrol: selfEnrolInput!
@@ -53,4 +54,3 @@ type selfEnrolOutput {
   sucess : Boolean!
   message : String!
 }
-

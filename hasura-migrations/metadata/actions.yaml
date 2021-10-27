@@ -6,7 +6,6 @@ actions:
     forward_client_headers: true
   permissions:
   - role: trainer
-actions:
 - name: selfEnrol
   definition:
     kind: synchronous
