@@ -18,10 +18,8 @@ custom_types:
   - name: UpdateQuizQuestionInput
   - name: UpdateQuizOptionDataInput
   - name: UpdateQuizOptionInput
-  objects:
-  - name: UpdateQuizOutput
-  input_objects:
   - name: selfEnrolInput
   objects:
+  - name: UpdateQuizOutput
   - name: selfEnrolOutput
   scalars: []
