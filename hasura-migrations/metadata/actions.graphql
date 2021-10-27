@@ -2,7 +2,9 @@ type Mutation {
   updateQuiz(
     object: UpdateQuizInput!
   ): UpdateQuizOutput
+}
 
+type Mutation {
   selfEnrol (
     self_enrol: selfEnrolInput!
   ): selfEnrolOutput
