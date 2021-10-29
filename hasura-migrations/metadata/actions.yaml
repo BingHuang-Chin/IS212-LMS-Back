@@ -1,4 +1,8 @@
 actions:
+- name: selfEnrol
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/API/selfEnrol'
 - name: updateQuiz
   definition:
     kind: synchronous
@@ -6,10 +10,6 @@ actions:
     forward_client_headers: true
   permissions:
   - role: trainer
-- name: selfEnrol
-  definition:
-    kind: synchronous
-    handler: '{{ACTION_BASE_URL}}/API/selfEnrol'
 custom_types:
   enums: []
   input_objects:

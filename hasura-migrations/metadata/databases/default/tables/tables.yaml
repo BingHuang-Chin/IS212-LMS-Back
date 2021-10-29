@@ -1,5 +1,6 @@
 - "!include public_badge.yaml"
 - "!include public_class.yaml"
+- "!include public_completed_course.yaml"
 - "!include public_course.yaml"
 - "!include public_enrolment.yaml"
 - "!include public_grade.yaml"
