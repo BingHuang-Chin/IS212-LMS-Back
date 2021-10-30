@@ -9,7 +9,7 @@ const validMockData = {
   action: { name: 'gradeQuiz' }
 }
 
-const quizInformationFromHasura = {
+const failingScoreQuizInformationFromHasura = {
   "data": {
     "quiz_by_pk": {
       "questions": [
@@ -33,6 +33,30 @@ const quizInformationFromHasura = {
   }
 }
 
+const passingScoreQuizInformationFromHasura = {
+  "data": {
+    "quiz_by_pk": {
+      "questions": [
+        {
+          "question_options": [
+            {
+              "id": 1,
+              "is_answer": true
+            }
+          ]
+        }
+      ]
+    },
+    "completed_quiz_by_pk": {
+      "selected_options": [
+        {
+          "option_id": 1
+        }
+      ]
+    }
+  }
+}
+
 test("[retrieveBodyData] Empty input", () => {
   const mockQuizChanges = {}
   const retrievedData = retrieveBodyData(mockQuizChanges)
@@ -45,7 +69,7 @@ test("[retrieveBodyData] Populated input", () => {
 })
 
 test("[retrieveQuizInformation] Retrieve answers and user selections from Hasura.", async () => {
-  const expectedResponse = quizInformationFromHasura
+  const expectedResponse = failingScoreQuizInformationFromHasura
 
   fetch.mockImplementation(() => Promise.resolve({ json: () => expectedResponse }))
 
@@ -95,9 +119,14 @@ test("[retrieveQuizInformation] Retrieve quiz information with invalid query.", 
   expect(message).toEqual(expect.any(String))
 })
 
-test("[getScore] Calculate score", () => {
-  const { data: { quiz_by_pk, completed_quiz_by_pk } } = quizInformationFromHasura
+test("[getScore] Calculate score (failing)", () => {
+  const { data: { quiz_by_pk, completed_quiz_by_pk } } = failingScoreQuizInformationFromHasura
+  const failScore = getScore(quiz_by_pk, completed_quiz_by_pk)
+  expect(failScore).toBe(0)
+})
 
-  const score = getScore(quiz_by_pk, completed_quiz_by_pk)
-  expect(score).toBe(0)
+test("[getScore] Calculate score (passing)", () => {
+  const { data: { quiz_by_pk, completed_quiz_by_pk } } = passingScoreQuizInformationFromHasura
+  const passScore = getScore(quiz_by_pk, completed_quiz_by_pk)
+  expect(passScore).toBe(1)
 })
