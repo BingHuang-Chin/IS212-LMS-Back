@@ -59,8 +59,17 @@ function retrieveQuizInformation (quizId, learnerId, attempt) {
   })
 }
 
-function getScore(answers, selectedOptions) {
+function getScore (answers, selectedOptions) {
+  const mappedAnswers = [].concat(...answers.questions.map(question => question.question_options.map(option => option.id)))
+  const mappedSelectedOptions = selectedOptions.selected_options.map(option => option.option_id)
 
+  let score = 0
+  for (const selectedOption of mappedSelectedOptions) {
+    if (mappedAnswers.includes(selectedOption))
+      score += 1
+  }
+
+  return score
 }
 
 module.exports = {
