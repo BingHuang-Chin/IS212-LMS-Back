@@ -1,5 +1,5 @@
 const fetch = require("node-fetch")
-const { retrieveBodyData, retrieveQuizInformation } = require("./AutogradeQuiz")
+const { retrieveBodyData, retrieveQuizInformation, getScore } = require("./AutogradeQuiz")
 
 jest.mock("node-fetch", () => jest.fn())
 
@@ -93,4 +93,11 @@ test("[retrieveQuizInformation] Retrieve quiz information with invalid query.", 
 
   expect(status).toBe(500)
   expect(message).toEqual(expect.any(String))
+})
+
+test("[getScore] Calculate score", () => {
+  const { data: { quiz_by_pk, completed_quiz_by_pk } } = quizInformationFromHasura
+
+  const score = getScore(quiz_by_pk, completed_quiz_by_pk)
+  expect(score).toBe(0)
 })
