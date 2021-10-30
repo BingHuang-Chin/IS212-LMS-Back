@@ -59,8 +59,13 @@ function retrieveQuizInformation (quizId, learnerId, attempt) {
   })
 }
 
+function getScore(answers, selectedOptions) {
+
+}
+
 module.exports = {
   retrieveBodyData,
   retrieveQuizInformation,
+  getScore,
   default: vercelFn
 }
