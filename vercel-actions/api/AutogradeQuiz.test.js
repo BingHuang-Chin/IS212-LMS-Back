@@ -44,7 +44,7 @@ test("[retrieveBodyData] Populated input", () => {
   expect(retrievedData).toEqual({ input: validMockData.input.object, userRole: validMockData.session_variables["x-hasura-role"] })
 })
 
-test("[retrieveQuizInformation] Retrieve answers and user selections from Hasura.", () => {
+test("[retrieveQuizInformation] Retrieve answers and user selections from Hasura.", async () => {
   const expectedResponse = quizInformationFromHasura
 
   fetch.mockImplementation(() => Promise.resolve({ json: () => expectedResponse }))
