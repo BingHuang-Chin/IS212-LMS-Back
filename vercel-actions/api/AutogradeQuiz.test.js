@@ -1,9 +1,36 @@
-const { retrieveBodyData } = require("./AutogradeQuiz")
+const fetch = require("node-fetch")
+const { retrieveBodyData, retrieveQuizInformation } = require("./AutogradeQuiz")
+
+jest.mock("node-fetch", () => jest.fn())
 
 const validMockData = {
   session_variables: { 'x-hasura-role': 'learner' },
   input: { object: { learner_id: 1, quiz_id: 1, attempt: 1 } },
   action: { name: 'gradeQuiz' }
+}
+
+const quizInformationFromHasura = {
+  "data": {
+    "quiz_by_pk": {
+      "questions": [
+        {
+          "question_options": [
+            {
+              "id": 1,
+              "is_answer": true
+            }
+          ]
+        }
+      ]
+    },
+    "completed_quiz_by_pk": {
+      "selected_options": [
+        {
+          "option_id": 3
+        }
+      ]
+    }
+  }
 }
 
 test("[retrieveBodyData] Empty input", () => {
@@ -17,3 +44,14 @@ test("[retrieveBodyData] Populated input", () => {
   expect(retrievedData).toEqual({ input: validMockData.input.object, userRole: validMockData.session_variables["x-hasura-role"] })
 })
 
+test("[retrieveQuizInformation] Retrieve answers and user selections from Hasura.", () => {
+  const expectedResponse = quizInformationFromHasura
+
+  fetch.mockImplementation(() => Promise.resolve({ json: () => expectedResponse }))
+
+  const { data } = await retrieveQuizInformation(1, 1, 1)
+  const { status, ...remainingData } = data
+
+  expect(status).toBe(200)
+  expect(remainingData).toEqual(expectedResponse.data)
+})
