@@ -86,8 +86,7 @@ function updateQuizScore (quizId, learnerId, attempt, score) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-hasura-admin-secret": process.env.HASURA_ADMIN_SECRET,
-        "x-hasura-role": role
+        "x-hasura-admin-secret": process.env.HASURA_ADMIN_SECRET
       },
       body: JSON.stringify({
         query: `
