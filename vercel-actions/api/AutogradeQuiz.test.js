@@ -55,3 +55,20 @@ test("[retrieveQuizInformation] Retrieve answers and user selections from Hasura
   expect(status).toBe(200)
   expect(remainingData).toEqual(expectedResponse.data)
 })
+
+test("[retrieveQuizInformation] Retrieve invalid quiz information from Hasura.", async () => {
+  const expectedResponse = {
+    "data": {
+      "quiz_by_pk": null,
+      "completed_quiz_by_pk": null
+    }
+  }
+
+  fetch.mockImplementation(() => Promise.resolve({ json: () => expectedResponse }))
+
+  const { error } = await retrieveQuizInformation(1, 1, 1)
+  const { status, message } = error
+
+  expect(status).toBe(404)
+  expect(message).toEqual(expect.any(String))
+})
