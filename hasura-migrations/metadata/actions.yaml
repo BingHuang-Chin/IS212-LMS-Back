@@ -1,4 +1,10 @@
 actions:
+- name: gradeQuiz
+  definition:
+    kind: synchronous
+    handler: http://host.docker.internal:3000
+  permissions:
+  - role: learner
 - name: updateQuiz
   definition:
     kind: synchronous
@@ -14,6 +20,8 @@ custom_types:
   - name: UpdateQuizQuestionInput
   - name: UpdateQuizOptionDataInput
   - name: UpdateQuizOptionInput
+  - name: gradeQuizInput
   objects:
   - name: UpdateQuizOutput
+  - name: gradeQuizOutput
   scalars: []
