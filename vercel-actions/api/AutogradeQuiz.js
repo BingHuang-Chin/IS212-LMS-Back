@@ -6,12 +6,13 @@ const vercelFn = async (request, response) => {
 
   const { learner_id, quiz_id, attempt } = input
   const { error: quizRetrievalError, data: quizInfo } = await retrieveQuizInformation(quiz_id, learner_id, attempt)
-  if (quizRetrievalError) return response.json(bodyDataError)
+  if (quizRetrievalError) return response.json(quizRetrievalError)
 
   const { quiz_by_pk, completed_quiz_by_pk } = quizInfo
   const score = getScore(quiz_by_pk, completed_quiz_by_pk)
 
-  return response.json({ status: 200, message: "Hello world!" })
+  const { error: updateScoreError, data: updatedScoreResponse} = await updateQuizScore(quiz_id, learner_id, attempt, score)
+  return response.json(updateScoreError ? updateScoreError : updatedScoreResponse)
 }
 
 function retrieveBodyData (body) {
@@ -55,7 +56,7 @@ function retrieveQuizInformation (quizId, learnerId, attempt) {
         if (errors)
           return resolve({ error: { status: 500, message: "Internal server error." } })
 
-        if (!data.quiz_by_pk)
+        if (!data.quiz_by_pk || !data.completed_quiz_by_pk)
           resolve({ error: { status: 404, message: "Quiz not found." } })
 
         resolve({ data: { ...data, status: 200 } })
@@ -77,6 +78,34 @@ function getScore (answers, selectedOptions) {
   }
 
   return score
+}
+
+function updateQuizScore (quizId, learnerId, attempt, score) {
+  return new Promise(resolve => {
+    fetch(process.env.HASURA_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-hasura-admin-secret": process.env.HASURA_ADMIN_SECRET,
+        "x-hasura-role": role
+      },
+      body: JSON.stringify({
+        query: `
+          mutation {
+            update_completed_quiz_by_pk(pk_columns: {quiz_id: ${quizId}, learner_id: ${learnerId}, attempt: ${attempt}}, _set: { score: ${score} }) {
+              score
+            }
+          }        
+        `
+      })
+    })
+      .then(() => {
+        resolve({ data: { status: 200, message: "Updated successfully." } })
+      })
+      .catch(() => {
+        resolve({ error: { status: 500, message: "Internal server error." } })
+      })
+  })
 }
 
 module.exports = {
