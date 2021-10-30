@@ -72,3 +72,25 @@ test("[retrieveQuizInformation] Retrieve invalid quiz information from Hasura.",
   expect(status).toBe(404)
   expect(message).toEqual(expect.any(String))
 })
+
+test("[retrieveQuizInformation] Retrieve quiz information with invalid query.", async () => {
+  const expectedResponse = {
+    "errors": [
+      {
+        "extensions": {
+          "path": "$.selectionSet.completed_quiz_by_pk.selectionSet.selected_options.selectionSet.a",
+          "code": "validation-failed"
+        },
+        "message": "field \"a\" not found in type: 'selected_options'"
+      }
+    ]
+  }
+
+  fetch.mockImplementation(() => Promise.resolve({ json: () => expectedResponse }))
+
+  const { error } = await retrieveQuizInformation(1, 1, 1)
+  const { status, message } = error
+
+  expect(status).toBe(500)
+  expect(message).toEqual(expect.any(String))
+})
