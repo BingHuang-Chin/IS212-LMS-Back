@@ -1,8 +1,15 @@
 const fetch = require("node-fetch")
 
 const vercelFn = async (request, response) => {
-  const { error: bodyDataError, input, userRole } = retrieveBodyData(request.body)
+  const { error: bodyDataError, input } = retrieveBodyData(request.body)
   if (bodyDataError) return response.json(bodyDataError)
+
+  const { learner_id, quiz_id, attempt } = input
+  const { error: quizRetrievalError, data: quizInfo } = await retrieveQuizInformation(quiz_id, learner_id, attempt)
+  if (quizRetrievalError) return response.json(bodyDataError)
+
+  const { quiz_by_pk, completed_quiz_by_pk } = quizInfo
+  const score = getScore(quiz_by_pk, completed_quiz_by_pk)
 
   return response.json({ status: 200, message: "Hello world!" })
 }
