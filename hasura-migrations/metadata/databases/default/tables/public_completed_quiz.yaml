@@ -1,0 +1,3 @@
+table:
+  name: completed_quiz
+  schema: public
