@@ -1,0 +1,15 @@
+table:
+  name: completed_quiz
+  schema: public
+array_relationships:
+- name: selected_options
+  using:
+    manual_configuration:
+      column_mapping:
+        attempt: attempt
+        learner_id: learner_id
+        quiz_id: quiz_id
+      insertion_order: null
+      remote_table:
+        name: selected_options
+        schema: public

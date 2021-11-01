@@ -7,8 +7,8 @@ insert_permissions:
     check: {}
     columns:
     - is_answer
-    - id
     - question_id
+    - title
   role: trainer
 select_permissions:
 - permission:
@@ -26,9 +26,10 @@ select_permissions:
   role: learner
 - permission:
     columns:
-    - is_answer
     - id
+    - is_answer
     - question_id
+    - title
     filter: {}
   role: trainer
 update_permissions:
@@ -36,8 +37,8 @@ update_permissions:
     check: null
     columns:
     - is_answer
-    - id
     - question_id
+    - title
     filter: {}
   role: trainer
 delete_permissions:
