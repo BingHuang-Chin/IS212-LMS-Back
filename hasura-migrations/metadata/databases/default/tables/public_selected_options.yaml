@@ -1,3 +1,22 @@
 table:
   name: selected_options
   schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - attempt
+    - learner_id
+    - option_id
+    - quiz_id
+  role: learner
+select_permissions:
+- permission:
+    columns:
+    - option_id
+    - quiz_id
+    - learner_id
+    - attempt
+    filter: {}
+  role: learner

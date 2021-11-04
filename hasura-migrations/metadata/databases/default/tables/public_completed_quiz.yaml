@@ -22,3 +22,11 @@ insert_permissions:
     - learner_id
     - quiz_id
   role: learner
+select_permissions:
+- permission:
+    columns:
+    - attempt
+    - learner_id
+    - quiz_id
+    filter: {}
+  role: learner
