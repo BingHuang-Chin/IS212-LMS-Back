@@ -22,6 +22,7 @@ select_permissions:
     columns:
     - id
     - question_id
+    - title
     filter: {}
   role: learner
 - permission:
