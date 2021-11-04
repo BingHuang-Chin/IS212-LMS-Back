@@ -13,3 +13,12 @@ array_relationships:
       remote_table:
         name: selected_options
         schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - attempt
+    - learner_id
+    - quiz_id
+  role: learner
