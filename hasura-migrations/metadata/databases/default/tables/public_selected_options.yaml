@@ -1,0 +1,3 @@
+table:
+  name: selected_options
+  schema: public

@@ -1,5 +1,6 @@
 - "!include public_badge.yaml"
 - "!include public_class.yaml"
+- "!include public_completed_quiz.yaml"
 - "!include public_course.yaml"
 - "!include public_enrolment.yaml"
 - "!include public_grade.yaml"
@@ -10,5 +11,6 @@
 - "!include public_question_type.yaml"
 - "!include public_quiz.yaml"
 - "!include public_section.yaml"
+- "!include public_selected_options.yaml"
 - "!include public_status.yaml"
 - "!include public_trainer.yaml"
