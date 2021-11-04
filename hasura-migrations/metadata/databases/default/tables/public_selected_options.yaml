@@ -9,15 +9,17 @@ insert_permissions:
     - attempt
     - learner_id
     - option_id
+    - question_id
     - quiz_id
   role: learner
 select_permissions:
 - permission:
     columns:
-    - option_id
-    - quiz_id
-    - learner_id
     - attempt
+    - learner_id
+    - option_id
+    - question_id
+    - quiz_id
     filter: {}
   role: learner
 update_permissions:
