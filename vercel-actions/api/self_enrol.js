@@ -91,7 +91,7 @@ function checkClassSize (class_size, role) {
             })
         })
 
-function withdrawClass (class_size, role) {
+function checkPrerequisite (learner_id, badge_id, course_id, course_completion_date,) {
     //TODO: Processing
     var checkQuery = `query {
             course(where: {class_size: {_gte: "${class_size}"}}) {
@@ -120,8 +120,11 @@ function withdrawClass (class_size, role) {
     
             // if (!data.quiz_by_pk)
             //   resolve({ error: { status: 404, message: "Course not found." } })
-    
-            return resolve({ data: { ...data, status: 200 } })
+            func(data1) {
+                //check
+                return data1
+            }
+            return resolve({ data: { data1, status: 200 } })
             })
             .catch(() => {
             // console.log("errors")
