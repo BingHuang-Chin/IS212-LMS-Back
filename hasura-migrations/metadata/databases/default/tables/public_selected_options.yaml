@@ -9,6 +9,7 @@ insert_permissions:
     - attempt
     - learner_id
     - option_id
+    - question_id
     - quiz_id
   role: learner
 select_permissions:
