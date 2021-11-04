@@ -28,5 +28,13 @@ select_permissions:
     - attempt
     - learner_id
     - quiz_id
+    - score
+    filter: {}
+  role: learner
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - attempt
     filter: {}
   role: learner

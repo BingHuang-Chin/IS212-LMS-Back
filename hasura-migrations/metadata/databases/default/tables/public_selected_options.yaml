@@ -20,3 +20,10 @@ select_permissions:
     - attempt
     filter: {}
   role: learner
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - option_id
+    filter: {}
+  role: learner
