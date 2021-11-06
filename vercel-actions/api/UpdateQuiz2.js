@@ -1,3 +1,7 @@
+/**
+ * Authored by: Bing Huang
+ */
+
 const fetch = require("node-fetch")
 const { retrieveBodyData, getOldQuiz, getChanges, convertToGqlQuery } = require("./UpdateQuiz")
 

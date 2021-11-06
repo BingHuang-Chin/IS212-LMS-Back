@@ -20,6 +20,7 @@ insert_permissions:
     - end_date
     - enrolment_end_date
     - enrolment_start_date
+    - id
     - name
     - start_date
     - trainer_id
@@ -34,6 +35,7 @@ select_permissions:
     - end_date
     - enrolment_end_date
     - enrolment_start_date
+    - id
     - name
     - start_date
     - trainer_id
@@ -64,6 +66,7 @@ update_permissions:
     - end_date
     - enrolment_end_date
     - enrolment_start_date
+    - id
     - name
     - start_date
     - trainer_id

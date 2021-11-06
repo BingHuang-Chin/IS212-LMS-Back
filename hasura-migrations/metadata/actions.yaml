@@ -3,6 +3,12 @@ actions:
   definition:
     kind: synchronous
     handler: '{{ACTION_BASE_URL}}/API/selfEnrol'
+- name: gradeQuiz
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/AutogradeQuiz'
+  permissions:
+  - role: learner
 - name: updateQuiz
   definition:
     kind: synchronous
@@ -18,8 +24,10 @@ custom_types:
   - name: UpdateQuizQuestionInput
   - name: UpdateQuizOptionDataInput
   - name: UpdateQuizOptionInput
+  - name: gradeQuizInput
   - name: selfEnrolInput
   objects:
   - name: UpdateQuizOutput
   - name: selfEnrolOutput
+  - name: gradeQuizOutput
   scalars: []

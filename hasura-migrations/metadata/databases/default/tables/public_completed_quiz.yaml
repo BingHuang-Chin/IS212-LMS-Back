@@ -1,0 +1,40 @@
+table:
+  name: completed_quiz
+  schema: public
+array_relationships:
+- name: selected_options
+  using:
+    manual_configuration:
+      column_mapping:
+        attempt: attempt
+        learner_id: learner_id
+        quiz_id: quiz_id
+      insertion_order: null
+      remote_table:
+        name: selected_options
+        schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - attempt
+    - learner_id
+    - quiz_id
+  role: learner
+select_permissions:
+- permission:
+    columns:
+    - attempt
+    - learner_id
+    - quiz_id
+    - score
+    filter: {}
+  role: learner
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - attempt
+    filter: {}
+  role: learner

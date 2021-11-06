@@ -5,7 +5,13 @@ type Mutation {
 }
 
 type Mutation {
-  updateQuiz (
+  gradeQuiz(
+    object: gradeQuizInput!
+  ): gradeQuizOutput
+}
+
+type Mutation {
+  updateQuiz(
     object: UpdateQuizInput!
   ): UpdateQuizOutput
 }
@@ -44,6 +50,12 @@ input selfEnrolInput {
   courseID : Int!
 }
 
+input gradeQuizInput {
+  learner_id: Int!
+  quiz_id: Int!
+  attempt: Int
+}
+
 type UpdateQuizOutput {
   status : Int!
   message : String!
@@ -52,5 +64,10 @@ type UpdateQuizOutput {
 type selfEnrolOutput {
   sucess : Boolean!
   message : String!
+}
+
+type gradeQuizOutput {
+  status: Int!
+  message: String!
 }
 

@@ -1,13 +1,74 @@
 table:
   name: enrolment
   schema: public
+object_relationships:
+- name: class
+  using:
+    foreign_key_constraint_on: class_id
+- name: course
+  using:
+    foreign_key_constraint_on: course_id
+- name: learner
+  using:
+    foreign_key_constraint_on: learner_id
+- name: status
+  using:
+    foreign_key_constraint_on: status_id
+- name: trainer
+  using:
+    foreign_key_constraint_on: trainer_id
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - class_id
+    - course_id
+    - learner_id
+    - status_id
+    - trainer_id
+  role: hr
 select_permissions:
 - permission:
     columns:
+    - class_id
     - course_id
     - learner_id
+    - status_id
+    - trainer_id
     - name
+    filter: {}
+  role: hr
+- permission:
+    columns:
+    - class_id
+    - course_id
+    - learner_id
     - status_id
     - trainer_id
     filter: {}
   role: learner
+- permission:
+    columns:
+    - class_id
+    - course_id
+    - learner_id
+    - status_id
+    - trainer_id
+    filter: {}
+  role: trainer
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - class_id
+    - course_id
+    - learner_id
+    - status_id
+    - trainer_id
+    filter: {}
+  role: hr
+delete_permissions:
+- permission:
+    filter: {}
+  role: hr
