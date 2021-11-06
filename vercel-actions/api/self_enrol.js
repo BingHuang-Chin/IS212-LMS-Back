@@ -2,17 +2,8 @@
 const fetch = require("node-fetch")
 
 const vercelFn = async (request, response) => {
-    return response.json({ hello : "world" })
+    return response.json({ hello: "world" })
 }
-
-// const selfEnrol = (learnerId, courseId) => {
-//     //TODO: Processing
-//     return true
-// }
-
-// function selfEnrol (learnerId, courseId) {
-//     return true
-// }
 
 function checkEnrolmentEndDate (enrolment_end_date, role) {
     //TODO: Processing
@@ -21,36 +12,36 @@ function checkEnrolmentEndDate (enrolment_end_date, role) {
             enrolment_end_date
             id
             }
-        }`  
+        }`
     // console.log(checkQuery)
     return new Promise(resolve => {
         fetch("http://localhost:8080/v1/graphql", {
             method: "POST",
             headers: {
-            "Content-Type": "application/json",
-            "x-hasura-admin-secret": "myadminsecretkey",
-            "x-hasura-role": role
+                "Content-Type": "application/json",
+                "x-hasura-admin-secret": "myadminsecretkey",
+                "x-hasura-role": role
             },
             body: JSON.stringify({
-            query: checkQuery
+                query: checkQuery
             })
         })
             .then(response => response.json())
             .then(({ errors, data }) => {
                 // console.log(errors, data)
-            if (errors)
-                return resolve({ error: { status: 500, message: "Internal server error." } })
-    
-            // if (!data.quiz_by_pk)
-            //   resolve({ error: { status: 404, message: "Course not found." } })
-    
-            return resolve({ data: { ...data, status: 200 } })
+                if (errors)
+                    return resolve({ error: { status: 500, message: "Internal server error." } })
+
+                // if (!data.quiz_by_pk)
+                //   resolve({ error: { status: 404, message: "Course not found." } })
+
+                return resolve({ data: { ...data, status: 200 } })
             })
             .catch(() => {
-            // console.log("errors")
-            return resolve({ error: { status: 500, message: "Internal server error." } })
+                // console.log("errors")
+                return resolve({ error: { status: 500, message: "Internal server error." } })
             })
-        })
+    })
 }
 
 function checkClassSize (class_size, role) {
@@ -60,83 +51,74 @@ function checkClassSize (class_size, role) {
             class_size
             id
             }
-        }`  
+        }`
     // console.log(checkQuery)
     return new Promise(resolve => {
         fetch("http://localhost:8080/v1/graphql", {
             method: "POST",
             headers: {
-            "Content-Type": "application/json",
-            "x-hasura-admin-secret": "myadminsecretkey",
-            "x-hasura-role": role
+                "Content-Type": "application/json",
+                "x-hasura-admin-secret": "myadminsecretkey",
+                "x-hasura-role": role
             },
             body: JSON.stringify({
-            query: checkQuery
+                query: checkQuery
             })
         })
             .then(response => response.json())
             .then(({ errors, data }) => {
                 // console.log(errors, data)
-            if (errors)
-                return resolve({ error: { status: 500, message: "Internal server error." } })
-    
-            // if (!data.quiz_by_pk)
-            //   resolve({ error: { status: 404, message: "Course not found." } })
-    
-            return resolve({ data: { ...data, status: 200 } })
+                if (errors)
+                    return resolve({ error: { status: 500, message: "Internal server error." } })
+
+                // if (!data.quiz_by_pk)
+                //   resolve({ error: { status: 404, message: "Course not found." } })
+
+                return resolve({ data: { ...data, status: 200 } })
             })
             .catch(() => {
-            // console.log("errors")
-            return resolve({ error: { status: 500, message: "Internal server error." } })
+                // console.log("errors")
+                return resolve({ error: { status: 500, message: "Internal server error." } })
             })
-        })
+    })
+}
 
-function checkPrerequisite (learner_id, badge_id, course_id, course_completion_date,) {
+function checkPrerequisite (learner_id, badge_id, course_id, course_completion_date) {
     //TODO: Processing
     var checkQuery = `query {
             course(where: {class_size: {_gte: "${class_size}"}}) {
             class_size
             id
             }
-        }`  
+        }`
     // console.log(checkQuery)
     return new Promise(resolve => {
         fetch("http://localhost:8080/v1/graphql", {
             method: "POST",
             headers: {
-            "Content-Type": "application/json",
-            "x-hasura-admin-secret": "myadminsecretkey",
-            "x-hasura-role": role
+                "Content-Type": "application/json",
+                "x-hasura-admin-secret": "myadminsecretkey",
+                "x-hasura-role": role
             },
             body: JSON.stringify({
-            query: checkQuery
+                query: checkQuery
             })
         })
             .then(response => response.json())
             .then(({ errors, data }) => {
-                // console.log(errors, data)
-            if (errors)
-                return resolve({ error: { status: 500, message: "Internal server error." } })
-    
-            // if (!data.quiz_by_pk)
-            //   resolve({ error: { status: 404, message: "Course not found." } })
-            func(data1) {
-                //check
-                return data1
-            }
-            return resolve({ data: { data1, status: 200 } })
+                if (errors)
+                    return resolve({ error: { status: 500, message: "Internal server error." } })
+
+                return resolve({ data: { data1, status: 200 } })
             })
             .catch(() => {
-            // console.log("errors")
-            return resolve({ error: { status: 500, message: "Internal server error." } })
+                return resolve({ error: { status: 500, message: "Internal server error." } })
             })
-        })
+    })
 }
 
 module.exports = {
-    // selfEnrol,
     checkEnrolmentEndDate,
     checkClassSize,
-    withdrawClass,
-    default : vercelFn
+    default: vercelFn
 }
