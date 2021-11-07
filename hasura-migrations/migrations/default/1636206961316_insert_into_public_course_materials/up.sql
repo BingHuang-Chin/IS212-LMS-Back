@@ -1,0 +1,1 @@
+INSERT INTO "public"."course_materials"("id", "chapter_name", "course_id", "trainer_id", "course_link", "description", "week", "section_id") VALUES (2, E'Chapter 2 (SPM): Software development Process', 1, 1, E'https://pdfuploadsunique.s3.us-east-2.amazonaws.com/week_1_slides.pdf', E'week 2 stuff ', 2, 2);
