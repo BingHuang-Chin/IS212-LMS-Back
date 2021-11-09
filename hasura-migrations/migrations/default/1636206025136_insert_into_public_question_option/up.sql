@@ -1,1 +1,1 @@
-INSERT INTO "public"."question_option"("id", "question_id", "is_answer", "title") VALUES (8, 3, true, E'No');
+INSERT INTO "public"."question_option"("question_id", "is_answer", "title") VALUES (3, true, E'No');

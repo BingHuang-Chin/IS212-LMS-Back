@@ -36,5 +36,6 @@ update_permissions:
     check: null
     columns:
     - attempt
+    - if_passed
     filter: {}
   role: learner

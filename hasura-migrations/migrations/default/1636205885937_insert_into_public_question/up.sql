@@ -1,1 +1,1 @@
-INSERT INTO "public"."question"("id", "quiz_id", "question_type_id", "title", "created_at") VALUES (2, 1, 2, E'LFC is the best team in the world', E'2021-11-06T13:25:34.791+00:00');
+INSERT INTO "public"."question"("quiz_id", "question_type_id", "title", "created_at") VALUES (1, 2, E'LFC is the best team in the world', E'2021-11-06T13:25:34.791+00:00');
