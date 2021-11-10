@@ -77,7 +77,8 @@ function getScore (answers, selectedOptions) {
       score += 1
   }
 
-  return [score, mappedAnswers.length]
+  const hasPassed = score >= (mappedAnswers.length / 2)
+  return [score, hasPassed]
 }
 
 function updateQuizScore (quizId, learnerId, attempt, score, hasPassQuiz) {
@@ -94,7 +95,7 @@ function updateQuizScore (quizId, learnerId, attempt, score, hasPassQuiz) {
             update_completed_quiz_by_pk(pk_columns: {quiz_id: ${quizId}, learner_id: ${learnerId}, attempt: ${attempt}}, _set: { score: ${score}, passed: ${hasPassQuiz} }) {
               score
             }
-          }        
+          }
         `
       })
     })
