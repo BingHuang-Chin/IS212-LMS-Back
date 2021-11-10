@@ -1,14 +1,15 @@
 actions:
+- name: enrolCourse
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/SelfEnrol'
+    forward_client_headers: true
 - name: gradeQuiz
   definition:
     kind: synchronous
     handler: '{{ACTION_BASE_URL}}/api/AutogradeQuiz'
   permissions:
   - role: learner
-- name: selfEnrol
-  definition:
-    kind: synchronous
-    handler: '{{ACTION_BASE_URL}}/API/selfEnrol'
 - name: updateQuiz
   definition:
     kind: synchronous
