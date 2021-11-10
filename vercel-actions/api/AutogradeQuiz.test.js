@@ -121,12 +121,16 @@ test("[retrieveQuizInformation] Retrieve quiz information with invalid query.", 
 
 test("[getScore] Calculate score (failing)", () => {
   const { data: { quiz_by_pk, completed_quiz_by_pk } } = failingScoreQuizInformationFromHasura
-  const failScore = getScore(quiz_by_pk, completed_quiz_by_pk)
-  expect(failScore).toBe(0)
+  const [score, totalScore] = getScore(quiz_by_pk, completed_quiz_by_pk)
+
+  expect(score).toBe(0)
+  expect(totalScore).toBe(1)
 })
 
 test("[getScore] Calculate score (passing)", () => {
   const { data: { quiz_by_pk, completed_quiz_by_pk } } = passingScoreQuizInformationFromHasura
-  const passScore = getScore(quiz_by_pk, completed_quiz_by_pk)
-  expect(passScore).toBe(1)
+  const [score, totalScore] = getScore(quiz_by_pk, completed_quiz_by_pk)
+
+  expect(score).toBe(1)
+  expect(totalScore).toBe(1)
 })
