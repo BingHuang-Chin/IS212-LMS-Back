@@ -36,7 +36,6 @@ select_permissions:
     - learner_id
     - status_id
     - trainer_id
-    - name
     filter: {}
   role: hr
 - permission:
