@@ -43,9 +43,15 @@ select_permissions:
   role: hr
 - permission:
     columns:
+    - class_end_time
+    - class_size
+    - class_start_time
     - course_id
-    - trainer_id
+    - end_date
+    - id
     - name
+    - start_date
+    - trainer_id
     filter: {}
   role: learner
 - permission:
