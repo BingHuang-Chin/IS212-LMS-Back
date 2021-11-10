@@ -1,13 +1,13 @@
 type Mutation {
-  selfEnrol (
-    self_enrol: selfEnrolInput!
-  ): selfEnrolOutput
-}
-
-type Mutation {
   gradeQuiz(
     object: gradeQuizInput!
   ): gradeQuizOutput
+}
+
+type Mutation {
+  selfEnrol(
+    self_enrol: selfEnrolInput!
+  ): selfEnrolOutput
 }
 
 type Mutation {
@@ -17,37 +17,37 @@ type Mutation {
 }
 
 input UpdateQuizInput {
-  id : Int!
-  section_id : Int!
-  time_limit : Int!
-  title : String!
-  questions : UpdateQuizQuestionDataInput!
+  id: Int!
+  section_id: Int!
+  time_limit: Int!
+  title: String!
+  questions: UpdateQuizQuestionDataInput!
 }
 
 input UpdateQuizQuestionDataInput {
-  data : [UpdateQuizQuestionInput!]!
+  data: [UpdateQuizQuestionInput!]!
 }
 
 input UpdateQuizQuestionInput {
-  id : Int
-  question_type_id : Int!
-  title : String!
-  question_options : UpdateQuizOptionDataInput!
+  id: Int
+  question_type_id: Int!
+  title: String!
+  question_options: UpdateQuizOptionDataInput!
 }
 
 input UpdateQuizOptionDataInput {
-  data : [UpdateQuizOptionInput!]!
+  data: [UpdateQuizOptionInput!]!
 }
 
 input UpdateQuizOptionInput {
-  is_answer : Boolean!
-  title : String!
-  id : Int
+  is_answer: Boolean!
+  title: String!
+  id: Int
 }
 
 input selfEnrolInput {
-  learnerId : Int!
-  courseID : Int!
+  learnerId: Int!
+  courseID: Int!
 }
 
 input gradeQuizInput {
@@ -57,13 +57,13 @@ input gradeQuizInput {
 }
 
 type UpdateQuizOutput {
-  status : Int!
-  message : String!
+  status: Int!
+  message: String!
 }
 
 type selfEnrolOutput {
-  sucess : Boolean!
-  message : String!
+  sucess: Boolean!
+  message: String!
 }
 
 type gradeQuizOutput {
