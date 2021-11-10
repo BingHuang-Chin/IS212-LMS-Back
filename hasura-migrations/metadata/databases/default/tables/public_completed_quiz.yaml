@@ -19,14 +19,19 @@ insert_permissions:
     check: {}
     columns:
     - attempt
+    - if_passed
     - learner_id
+    - passed
     - quiz_id
+    - score
   role: learner
 select_permissions:
 - permission:
     columns:
     - attempt
+    - if_passed
     - learner_id
+    - passed
     - quiz_id
     - score
     filter: {}
@@ -36,5 +41,10 @@ update_permissions:
     check: null
     columns:
     - attempt
+    - if_passed
+    - learner_id
+    - passed
+    - quiz_id
+    - score
     filter: {}
   role: learner

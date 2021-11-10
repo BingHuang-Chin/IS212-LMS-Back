@@ -9,9 +9,9 @@ const vercelFn = async (request, response) => {
   if (quizRetrievalError) return response.json(quizRetrievalError)
 
   const { quiz_by_pk, completed_quiz_by_pk } = quizInfo
-  const score = getScore(quiz_by_pk, completed_quiz_by_pk)
+  const [score, hasPassedQuiz] = getScore(quiz_by_pk, completed_quiz_by_pk)
 
-  const { error: updateScoreError, data: updatedScoreResponse} = await updateQuizScore(quiz_id, learner_id, attempt, score)
+  const { error: updateScoreError, data: updatedScoreResponse } = await updateQuizScore(quiz_id, learner_id, attempt, score, hasPassedQuiz)
   return response.json(updateScoreError ? updateScoreError : updatedScoreResponse)
 }
 
@@ -77,10 +77,11 @@ function getScore (answers, selectedOptions) {
       score += 1
   }
 
-  return score
+  const hasPassed = score >= (mappedAnswers.length / 2)
+  return [score, hasPassed]
 }
 
-function updateQuizScore (quizId, learnerId, attempt, score) {
+function updateQuizScore (quizId, learnerId, attempt, score, hasPassQuiz) {
   return new Promise(resolve => {
     fetch(process.env.HASURA_ENDPOINT, {
       method: "POST",
@@ -91,10 +92,10 @@ function updateQuizScore (quizId, learnerId, attempt, score) {
       body: JSON.stringify({
         query: `
           mutation {
-            update_completed_quiz_by_pk(pk_columns: {quiz_id: ${quizId}, learner_id: ${learnerId}, attempt: ${attempt}}, _set: { score: ${score} }) {
+            update_completed_quiz_by_pk(pk_columns: {quiz_id: ${quizId}, learner_id: ${learnerId}, attempt: ${attempt}}, _set: { score: ${score}, passed: ${hasPassQuiz} }) {
               score
             }
-          }        
+          }
         `
       })
     })
