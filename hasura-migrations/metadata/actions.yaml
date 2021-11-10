@@ -4,6 +4,8 @@ actions:
     kind: synchronous
     handler: '{{ACTION_BASE_URL}}/api/SelfEnrol'
     forward_client_headers: true
+  permissions:
+  - role: learner
 - name: gradeQuiz
   definition:
     kind: synchronous
