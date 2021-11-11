@@ -2,6 +2,9 @@ table:
   name: enrolment
   schema: public
 object_relationships:
+- name: class
+  using:
+    foreign_key_constraint_on: class_id
 - name: course
   using:
     foreign_key_constraint_on: course_id
@@ -19,49 +22,49 @@ insert_permissions:
     backend_only: false
     check: {}
     columns:
-    - learner_id
+    - class_id
     - course_id
-    - trainer_id
-    - name
+    - learner_id
     - status_id
+    - trainer_id
   role: hr
 select_permissions:
 - permission:
     columns:
+    - class_id
     - course_id
     - learner_id
     - status_id
     - trainer_id
-    - name
     filter: {}
   role: hr
 - permission:
     columns:
+    - class_id
     - course_id
     - learner_id
     - status_id
     - trainer_id
-    - name
     filter: {}
   role: learner
 - permission:
     columns:
+    - class_id
     - course_id
     - learner_id
     - status_id
     - trainer_id
-    - name
     filter: {}
   role: trainer
 update_permissions:
 - permission:
     check: null
     columns:
+    - class_id
     - course_id
     - learner_id
     - status_id
     - trainer_id
-    - name
     filter: {}
   role: hr
 delete_permissions:

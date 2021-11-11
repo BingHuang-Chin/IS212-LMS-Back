@@ -6,7 +6,6 @@ insert_permissions:
     backend_only: false
     check: {}
     columns:
-    - id
     - is_answer
     - question_id
     - title
@@ -17,7 +16,6 @@ select_permissions:
     - id
     - is_answer
     - question_id
-    - title
     filter: {}
   role: hr
 - permission:
@@ -39,7 +37,6 @@ update_permissions:
 - permission:
     check: null
     columns:
-    - id
     - is_answer
     - question_id
     - title
