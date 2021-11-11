@@ -13,16 +13,32 @@ insert_permissions:
     backend_only: false
     check: {}
     columns:
+    - class_end_time
+    - class_size
+    - class_start_time
     - course_id
-    - trainer_id
+    - end_date
+    - enrolment_end_date
+    - enrolment_start_date
+    - id
     - name
+    - start_date
+    - trainer_id
   role: hr
 select_permissions:
 - permission:
     columns:
+    - class_end_time
+    - class_size
+    - class_start_time
     - course_id
-    - trainer_id
+    - end_date
+    - enrolment_end_date
+    - enrolment_start_date
+    - id
     - name
+    - start_date
+    - trainer_id
     filter: {}
   role: hr
 - permission:
@@ -43,9 +59,17 @@ update_permissions:
 - permission:
     check: null
     columns:
+    - class_end_time
+    - class_size
+    - class_start_time
     - course_id
-    - trainer_id
+    - end_date
+    - enrolment_end_date
+    - enrolment_start_date
+    - id
     - name
+    - start_date
+    - trainer_id
     filter: {}
   role: hr
 delete_permissions:

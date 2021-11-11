@@ -1,6 +1,27 @@
-actions: []
+actions:
+- name: gradeQuiz
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/AutogradeQuiz'
+  permissions:
+  - role: learner
+- name: updateQuiz
+  definition:
+    kind: synchronous
+    handler: '{{ACTION_BASE_URL}}/api/UpdateQuiz'
+    forward_client_headers: true
+  permissions:
+  - role: trainer
 custom_types:
   enums: []
-  input_objects: []
-  objects: []
+  input_objects:
+  - name: UpdateQuizInput
+  - name: UpdateQuizQuestionDataInput
+  - name: UpdateQuizQuestionInput
+  - name: UpdateQuizOptionDataInput
+  - name: UpdateQuizOptionInput
+  - name: gradeQuizInput
+  objects:
+  - name: UpdateQuizOutput
+  - name: gradeQuizOutput
   scalars: []

@@ -1,0 +1,16 @@
+table:
+  name: course_materials
+  schema: public
+select_permissions:
+- permission:
+    columns:
+    - chapter_name
+    - course_id
+    - course_link
+    - description
+    - id
+    - section_id
+    - trainer_id
+    - week
+    filter: {}
+  role: learner

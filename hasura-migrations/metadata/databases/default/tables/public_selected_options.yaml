@@ -1,0 +1,31 @@
+table:
+  name: selected_options
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - attempt
+    - learner_id
+    - option_id
+    - question_id
+    - quiz_id
+  role: learner
+select_permissions:
+- permission:
+    columns:
+    - attempt
+    - learner_id
+    - option_id
+    - question_id
+    - quiz_id
+    filter: {}
+  role: learner
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - option_id
+    filter: {}
+  role: learner

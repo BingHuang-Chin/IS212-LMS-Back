@@ -13,6 +13,13 @@ array_relationships:
       table:
         name: class
         schema: public
+- name: course_materials
+  using:
+    foreign_key_constraint_on:
+      column: course_id
+      table:
+        name: course_materials
+        schema: public
 - name: enrolments
   using:
     foreign_key_constraint_on:
@@ -53,20 +60,20 @@ insert_permissions:
 select_permissions:
 - permission:
     columns:
-    - id
-    - title
-    - start_date
-    - end_date
-    - enrolment_start_date
-    - enrolment_end_date
-    - description
-    - created_at
-    - updated_at
-    - deleted_at
-    - created_by
-    - updated_by
-    - deleted_by
     - badge_id
+    - created_at
+    - created_by
+    - deleted_at
+    - deleted_by
+    - description
+    - end_date
+    - enrolment_end_date
+    - enrolment_start_date
+    - id
+    - start_date
+    - title
+    - updated_at
+    - updated_by
     filter: {}
   role: hr
 - permission:
